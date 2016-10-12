@@ -5,26 +5,34 @@ using System.Collections.Generic;
 
 public class createSphere : MonoBehaviour {
 
+    //radius = 10
+    //verts = 20
+    //halfCircles = 20
+
+    //Sphere object was created and turned into a prefab.
+    //Needed to make a empty game object and apply the script to said object (was applied to sphere object).
+
     public GameObject prefab;
     public int radius;
     public int verts;
     public int halfCircles;
-    public List<Vertex> vertices;
-    public float pi = 3.14159f;
+    public List<Vertex> vertices; //acts like render geometry Vertex pointer
+    public float pi = 3.14159f; //pi variable
 
     public struct Vertex
     {
-        public Vector3 position;
+        public Vector3 position; //vec4 variable from render geometry turned to vec3
     }
 
-    void Start ()
+    void Start () //acts like the createSphere function
     {
         vertices = new List<Vertex>();
         List<Vertex> halfCircleVerts = generateHalfCircleVerts(verts, radius);
         vertices = generateSphereVerts(verts, halfCircles, halfCircleVerts);
+        drawSphere(vertices);
     }
 
-    List<Vertex> generateHalfCircleVerts(int np, int rad)
+    List<Vertex> generateHalfCircleVerts(int np, int rad) //refactored rendering geometry function
     {
         List<Vertex> verts = new List<Vertex>();
 
@@ -38,7 +46,7 @@ public class createSphere : MonoBehaviour {
         return verts;
     }
 
-    List<Vertex> generateSphereVerts(int sides, int mirid, List<Vertex> halfCircle)
+    List<Vertex> generateSphereVerts(int sides, int mirid, List<Vertex> halfCircle) //refactored rendering geometry function
     {
         int count = 0;
         List<Vertex> verts = new List<Vertex>();
@@ -58,5 +66,13 @@ public class createSphere : MonoBehaviour {
             }
         }
         return verts;
+    }
+
+    void drawSphere(List<Vertex> vertices) //new draw function
+    {
+        foreach (Vertex v in vertices)
+        {                                   //used for rotations
+            Instantiate(prefab, v.position, Quaternion.identity);
+        }
     }
 }
