@@ -1,32 +1,39 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+using Interface;
 
-public class Agent : MonoBehaviour {
-    Vector3 velocity;
-    Vector3 force;
-    float mass;
+public class Agent : Iboid
+{
+    private Vector3 v_velocity;
+    private Vector3 v_position;
+    private float f_mass;
 
-    Vector3 displacement;
-    Vector3 desiredVelocity;
-    Vector3 steering;
-    public Transform target;
-
-    void FixedUpdate()
+    public Vector3 velocity
     {
-        displacement = target.position - transform.position;
-        desiredVelocity = displacement.normalized;
-        steering = (desiredVelocity - velocity).normalized / mass;
-        velocity += steering;
-
-        if (velocity.magnitude > 5)
-        {
-            velocity = velocity.normalized;
-        }
+        get { return v_velocity; }
+        set { v_velocity = value; }
     }
 
-    void LateUpdate()
+    public Vector3 position
     {
-        transform.position += velocity;
+        get { return v_position; }
+        set { v_position = value; }
+    }
+
+    public float mass
+    {
+        get { return f_mass; }
+        set { f_mass = value; }
+    }
+
+    public Agent(float m)
+    {
+        velocity = new Vector3();
+        position = new Vector3();
+        mass = (m <= 0) ? 1 : m;
+    }
+
+    public void updateVelocity()
+    {
+        position += velocity;
     }
 }
