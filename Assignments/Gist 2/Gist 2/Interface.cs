@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gist_2
+namespace Interface
 {
     interface Interface
     {
+
     }
 }
