@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Interface
 {
-    interface Interface
+    public interface I
     {
 
     }
