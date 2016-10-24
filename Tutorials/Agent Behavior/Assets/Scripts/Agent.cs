@@ -25,7 +25,7 @@ public class Agent : Iboid
         set { f_mass = value; }
     }
 
-    public Agent(float m)
+    public Agent(float mass)
     {
         velocity = Vector3.zero;
         position = Vector3.zero;
