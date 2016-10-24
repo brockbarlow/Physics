@@ -103,9 +103,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 1000011644048654, guid: 95fd2430ed5fa7747871d96c6f38a810, type: 2}
-  agentNumber: 5
+  agentNumber: 15
   minMass: 5
-  maxMass: 10
-  maxDistance: 100
+  maxMass: 20
+  maxDistance: 200
   steeringBehavior: 1.5
-  radius: 5
+  radius: 50

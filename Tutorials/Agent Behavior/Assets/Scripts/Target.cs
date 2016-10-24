@@ -3,16 +3,15 @@
 public class Target : MonoBehaviour
 {
     public GameObject prefab;
-    public int agentNumber;
+    [Range(1f, 25f)]public int agentNumber;
     public int minMass;
     public int maxMass;
-    public float maxDistance;
+    [Range(1f, 200f)]public float maxDistance;
     [Range(.1f, 1.5f)]public float steeringBehavior;
-    public float radius;
+    [Range(1f, 50f)]public float radius;
 
     void Start()
     {
-        steeringBehavior = 1;
         for (int i = 0; i < agentNumber; i++)
         {
             Vector3 Pos = Vector3.zero;

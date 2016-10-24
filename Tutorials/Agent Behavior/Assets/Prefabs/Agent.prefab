@@ -92,8 +92,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 4000010981937600, guid: 9ea23c5fd2664c341b21b0883b0dd829, type: 2}
-  steeringFactor: 1
-  radius: 5
+  steeringFactor: 0
+  radius: 0
 --- !u!114 &114000011305776352
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 4000010981937600, guid: 9ea23c5fd2664c341b21b0883b0dd829, type: 2}
-  steeringFactor: 1
+  steeringFactor: 0
 --- !u!114 &114000012878068086
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -118,4 +118,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65865fbaabc612944a0f866464d0da04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 1
+  mass: 0
