@@ -331,7 +331,7 @@ GameObject:
   - 135: {fileID: 2136917494}
   - 23: {fileID: 2136917493}
   m_Layer: 0
-  m_Name: Boid
+  m_Name: Agent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
