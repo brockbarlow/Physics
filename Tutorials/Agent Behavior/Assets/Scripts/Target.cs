@@ -1,43 +1,45 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Target : MonoBehaviour
 {
     public GameObject prefab;
-    public int agentCount;
+    public int agentNumber;
     public int minMass;
     public int maxMass;
     public float maxDistance;
-    [Range(.1f, 1.5f)]public float steerBehavior;
+    [Range(.1f, 1.5f)]public float steeringBehavior;
+    public float radius;
 
-    void Awake()
+    void Start()
     {
-        steerBehavior = 1;
-        for (int i = 0; i < agentCount; i++)
+        steeringBehavior = 1;
+        for (int i = 0; i < agentNumber; i++)
         {
-            Vector3 Position = new Vector3();
-            Position.x = Random.Range(-maxDistance, maxDistance);
-            Position.y = Random.Range(-maxDistance, maxDistance);
-            Position.z = Random.Range(-maxDistance, maxDistance);
+            Vector3 Pos = Vector3.zero;
+            Pos.x = Random.Range(-maxDistance, maxDistance);
+            Pos.y = Random.Range(-maxDistance, maxDistance);
+            Pos.z = Random.Range(-maxDistance, maxDistance);
 
-            GameObject temp = Instantiate(prefab, Position, Quaternion.identity) as GameObject;
+            GameObject temp = Instantiate(prefab, Pos, Quaternion.identity) as GameObject;
 
-            Seek s = temp.GetComponent<Seek>();
-            s.target = gameObject.transform;
-            s.steer = steerBehavior;
+            SeekArrive sa = temp.GetComponent<SeekArrive>();
+            sa.target = gameObject.transform;
+            sa.steeringFactor = steeringBehavior;
+            sa.radius = radius;
 
             Monoboid mb = temp.GetComponent<Monoboid>();
             mb.mass = Random.Range(minMass, maxMass);
-            mb.velocity = new Vector3(0, 1, 0);
+            mb.agent.velocity = Vector3.up;
         }
     }
 
     void Update()
     {
-        foreach (Seek s in FindObjectsOfType<Seek>())
+        foreach (SeekArrive sb in FindObjectsOfType<SeekArrive>())
         {
-            s.target = gameObject.transform;
-            s.steer = steerBehavior;
+            sb.target = gameObject.transform;
+            sb.steeringFactor = steeringBehavior;
+            sb.radius = radius;
         }
     }
 }

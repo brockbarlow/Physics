@@ -1,36 +1,18 @@
 ﻿using UnityEngine;
-using Interface;
 
-public class Monoboid : MonoBehaviour, Iboid
+public class Monoboid : MonoBehaviour
 {
-    private Agent a;
+    public Agent agent;
     public float mass;
 
-    public Vector3 velocity
+    void Awake()
     {
-        get { return a.velocity; }
-        set { a.velocity = value; }
-    }
-
-    public Vector3 position
-    {
-        get { return a.position; }
-        set { a.position = value; }
-    }
-
-    float Iboid.mass
-    {
-        get { return a.mass; }
-        set { a.mass = value; }
-    }
-
-    void Start()
-    {
-        a = new Agent(mass);
+        agent = new Agent(mass);
     }
 
     void LateUpdate()
     {
-        a.updateVelocity();
+        agent.UpdateVelocity();
+        transform.position = agent.position;
     }
 }

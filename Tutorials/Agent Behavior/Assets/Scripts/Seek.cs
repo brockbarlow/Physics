@@ -5,22 +5,22 @@ public class Seek : MonoBehaviour
     Vector3 desiredVelocity;
     Vector3 steering;
     public Transform target;
-    public float steer;
-    Monoboid agent;
+    public float steeringFactor;
+    Monoboid mb;
 
-    void Awake()
+    void Start()
     {
-        agent = gameObject.GetComponent<Monoboid>();
+        mb = gameObject.GetComponent<Monoboid>();
     }
 
     void FixedUpdate()
     {
         desiredVelocity = (target.position - transform.position).normalized;
-        steering = (desiredVelocity - agent.velocity).normalized * steer;
-        agent.velocity += steering / agent.mass;
-        if (agent.velocity.magnitude > 5)
+        steering = (desiredVelocity - mb.agent.velocity).normalized * steeringFactor;
+        mb.agent.velocity += steering / mb.agent.mass;
+        if (mb.agent.velocity.magnitude > 5)
         {
-            agent.velocity = agent.velocity.normalized;
+            mb.agent.velocity = mb.agent.velocity.normalized;
         }
     }
 }

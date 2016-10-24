@@ -27,12 +27,12 @@ public class Agent : Iboid
 
     public Agent(float m)
     {
-        velocity = new Vector3();
-        position = new Vector3();
-        mass = (m <= 0) ? 1 : m;
+        velocity = Vector3.zero;
+        position = Vector3.zero;
+        mass = (mass <= 0) ? 1 : mass;
     }
 
-    public void updateVelocity()
+    public void UpdateVelocity()
     {
         position += velocity;
     }
