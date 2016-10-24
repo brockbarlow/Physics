@@ -2,19 +2,20 @@
 
 public class SeekArrive : MonoBehaviour
 {
-    MonoBoid mb;
-    Vector3 desiredVelocity;
-    Vector3 steering;
+    private MonoBoid mb;
+    private Vector3 desiredVelocity;
+    private Vector3 steering;
+
     public Transform target;
     public float steeringFactor;
     public float radius;
 
-    void Start()
+    public void Start()
     {
         mb = gameObject.GetComponent<MonoBoid>();
     }
 
-    void FixedUpdate()
+    public void FixedUpdate()
     {
         float pushBackForceFactor = (target.position - transform.position).magnitude / radius;
         Vector3 pushBackForce = (target.position - transform.position).normalized * pushBackForceFactor;

@@ -2,18 +2,19 @@
 
 public class SeekBehavior : MonoBehaviour
 {
-    MonoBoid mb;
-    Vector3 desiredVelocity;
-    Vector3 steering;
+    private MonoBoid mb;
+    private Vector3 desiredVelocity;
+    private Vector3 steering;
+
     public Transform target;
     public float steeringFactor;
 
-    void Start()
+    public void Start()
     {
         mb = gameObject.GetComponent<MonoBoid>();
     }
 
-    void FixedUpdate()
+    public void FixedUpdate()
     {
         desiredVelocity = (target.position - transform.position).normalized;
         steering = (desiredVelocity - mb.agent.velocity).normalized * .1f * steeringFactor;

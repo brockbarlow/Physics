@@ -1,18 +1,18 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Target : MonoBehaviour
 {
     public GameObject prefab;
-    public int agentNumber;
-    public int minMass;
-    public int maxMass;
-    public float maxDistance;
-    public float radius;
-    [Range(.1f, 1.5f)]public float steeringBehavior;
-    public Vector3 pos;
+    [Range(1, 100)]public int agentNumber;
+    [Range(1, 10)]public int minMass;
+    [Range(1, 10)]public int maxMass;
+    [Range(1, 100)]public float maxDistance;
+    [Range(1, 50)]public float radius;
+    [Range(0.1f, 1.5f)]public float steeringBehavior;
 
-    void Awake()
+    private Vector3 pos;
+
+    public void Awake()
     {
         for (int i = 0; i < agentNumber; i++)
         {
@@ -43,15 +43,15 @@ public class Target : MonoBehaviour
         }
     }
 
-    void Update()
+    public void Update()
     {
-        foreach (SeekArrive sb in FindObjectOfType<SeekArrive>())
+        foreach (SeekArrive sb in FindObjectsOfType<SeekArrive>())
         {
             sb.target = gameObject.transform;
             sb.steeringFactor = steeringBehavior;
             sb.radius = radius;
         }
-        foreach (SeekBehavior sb in FindObjectOfType<SeekBehavior>())
+        foreach (SeekBehavior sb in FindObjectsOfType<SeekBehavior>())
         {
             sb.target = gameObject.transform;
             sb.steeringFactor = steeringBehavior;
