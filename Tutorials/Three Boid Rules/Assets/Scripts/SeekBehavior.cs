@@ -7,7 +7,7 @@ public class SeekBehavior : MonoBehaviour
     private Vector3 steering;
 
     public Transform target;
-    public float steeringFactor;
+    [HideInInspector]public float steeringFactor;
 
     public void Start()
     {

@@ -3,12 +3,12 @@
 public class SeekArrive : MonoBehaviour
 {
     private MonoBoid mb;
-    private Vector3 desiredVelocity;
-    private Vector3 steering;
+    private float pushBackForceFactor;
+    private Vector3 pushBackForce;
 
     public Transform target;
-    public float steeringFactor;
-    public float radius;
+    [HideInInspector]public float steeringFactor;
+    [HideInInspector]public float radius;
 
     public void Start()
     {
@@ -17,8 +17,8 @@ public class SeekArrive : MonoBehaviour
 
     public void FixedUpdate()
     {
-        float pushBackForceFactor = (target.position - transform.position).magnitude / radius;
-        Vector3 pushBackForce = (target.position - transform.position).normalized * pushBackForceFactor;
+        pushBackForceFactor = (target.position - transform.position).magnitude / radius;
+        pushBackForce = (target.position - transform.position).normalized * pushBackForceFactor;
         mb.agent.velocity = pushBackForce / mb.agent.mass;
         if (mb.agent.velocity.magnitude > 3)
         {

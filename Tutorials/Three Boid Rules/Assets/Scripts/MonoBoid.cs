@@ -3,7 +3,7 @@
 public class MonoBoid : MonoBehaviour
 {
     public Agent agent;
-    public float mass;
+    [HideInInspector]public float mass;
 
     public void Awake()
     {
