@@ -3,85 +3,91 @@ using System.Collections.Generic;
 
 public class BoidRules : MonoBehaviour
 {
-    public GameObject prefab;
-    [Range(1, 100)]public int boidNumber;
-    [Range(1, 100)]public float maxBoidDistance;
-    public Transform target;
-    [Range(0.1f, 1.0f)]public float cohesion;
-    [Range(0.1f, 1.0f)]public float dispersion;
-    [Range(0.0f, 1.0f)]public float alignment;
+    public GameObject prefab;                   
+    [Range(0, 100)]public int boidNumber;          //how many are created.
+    [Range(0, 100)]public float maxBoidDistance;   //how far are they when they spawn.
+    [Range(0.0f, 1.0f)]public float cohesion;      //value that will be multiplied with the returning cohesion value.
+    [Range(0.0f, 1.0f)]public float dispersion;    //value that will be multiplied with the returning dispersion value.
+    [Range(0.0f, 1.0f)]public float alignment;     //value that will be multiplied with the returning alignment value.
 
-    private List<BoidBehavior> boids;
+    private List<MonoBoid> boids;                  //will hold the boids.
+    private Vector3 r1;                            //holds cohesion value.
+    private Vector3 r2;                            //holds dispersion value.
+    private Vector3 r3;                            //holds alignment value.
+    private Vector3 pc;
+    private Vector3 c;
+    private Vector3 pv;
+    private Vector3 pos;
+    private MonoBoid b;
+    private GameObject temp;
 
     public void Awake()
     {
-        boids = new List<BoidBehavior>();
-        Vector3 pos = Vector3.zero;
+        boids = new List<MonoBoid>();
+        pos = Vector3.zero;
         for (int i = 0; i < boidNumber; i++)
         {
             pos.x = Random.Range(-maxBoidDistance, maxBoidDistance);
             pos.y = Random.Range(-maxBoidDistance, maxBoidDistance);
             pos.z = Random.Range(-maxBoidDistance, maxBoidDistance);
 
-            GameObject temp = Instantiate(prefab, pos, new Quaternion()) as GameObject;
-            BoidBehavior bb = temp.GetComponent<BoidBehavior>();
-            bb.velocity = bb.transform.position.normalized;
-            bb.transform.parent = transform;
-            boids.Add(bb);
+            temp = Instantiate(prefab, pos, new Quaternion()) as GameObject;
+            b = temp.GetComponent<MonoBoid>();
+            b.agent.velocity = b.agent.position.normalized;
+            b.transform.parent = transform;
+            boids.Add(b);
         }
     }
 
     public void FixedUpdate()
     {
-        foreach (BoidBehavior bb in boids)
+        foreach (MonoBoid b in boids)
         {
-            Vector3 r1 = cohesionRule(bb);
-            Vector3 r2 = dispersionRule(bb);
-            Vector3 r3 = alignmentRule(bb);
-            bb.velocity += r1 + r2 + r3;
+            r1 = cohesionRule(b) * cohesion;
+            r2 = dispersionRule(b) * dispersion;
+            r3 = alignmentRule(b) * alignment;
+            b.agent.velocity += (r1 + r2 + r3);
         }
     }
 
-    private Vector3 cohesionRule(BoidBehavior bb)
+    private Vector3 cohesionRule(MonoBoid b)
     {
-        Vector3 pcj = Vector3.zero;
-        foreach (BoidBehavior bj in boids)
+        pc = Vector3.zero;
+        foreach (MonoBoid bj in boids)
         {
-            if (bj != bb)
+            if (bj != b)
             {
-                pcj += bj.transform.position;
+                pc += bj.transform.position; 
             }
         }
-        pcj = pcj / (boids.Count - 1);
-        return (pcj - bb.transform.position).normalized * cohesion;
+        pc = pc / (boids.Count - 1);
+        return (pc - b.agent.position).normalized / 100; 
     }
 
-    private Vector3 dispersionRule(BoidBehavior bb)
+    private Vector3 dispersionRule(MonoBoid b)
     {
-        Vector3 c = Vector3.zero;
-        foreach (BoidBehavior bj in boids)
+        c = Vector3.zero;
+        foreach (MonoBoid bj in boids)
         {
-            if ((bj.transform.position - bb.transform.position).magnitude <= 100 * dispersion && bj != bb)
+            if ((bj.transform.position - b.agent.position).magnitude < 100  && bj != b) 
             {
-                c -= bj.transform.position - bb.transform.position;
+                c -= (bj.transform.position - b.agent.position); 
             }
         }
         return c.normalized;
     }
 
-    private Vector3 alignmentRule(BoidBehavior bb)
+    private Vector3 alignmentRule(MonoBoid b)
     {
-        Vector3 pvj = Vector3.zero;
-        foreach (BoidBehavior bj in boids)
+        pv = Vector3.zero;
+        foreach (MonoBoid bj in boids)
         {
-            if (bj != bb)
+            if (bj != b)
             {
-                pvj += bj.velocity;
+                pv += bj.agent.velocity;
             }
         }
-        pvj = pvj / (boids.Count - 1);
-        return (pvj - bb.velocity).normalized * alignment;
+        pv = pv / (boids.Count - 1);
+        return (pv - b.agent.velocity).normalized / 6;
     }
-
-
 }

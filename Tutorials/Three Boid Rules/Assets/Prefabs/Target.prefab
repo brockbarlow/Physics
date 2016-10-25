@@ -22,8 +22,7 @@ GameObject:
   - 33: {fileID: 33000012000184456}
   - 65: {fileID: 65000012413963990}
   - 23: {fileID: 23000012312208326}
-  - 114: {fileID: 114000012991435304}
-  - 114: {fileID: 114000013395799314}
+  - 114: {fileID: 114000014073739704}
   m_Layer: 0
   m_Name: Target
   m_TagString: Untagged
@@ -92,7 +91,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114000012991435304
+--- !u!114 &114000014073739704
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -104,27 +103,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 1000010345122056, guid: ffa07dcfe43f3bb4785a0e4e404b733f, type: 2}
-  agentNumber: 20
+  agentNumber: 50
   minMass: 5
   maxMass: 10
   maxDistance: 100
   radius: 50
-  steeringBehavior: 1.5
---- !u!114 &114000013395799314
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013433855074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f5b8d170a7fecd4c8af6a34633152ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 1000012255902628, guid: 06f9db56d0650d54f906eacca6709664, type: 2}
-  boidNumber: 20
-  maxBoidDistance: 50
-  target: {fileID: 4000013117254836}
-  cohesion: 0.833
-  dispersion: 0.523
-  alignment: 0.156
+  steeringBehavior: 1
