@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Interface;
 
-public class Agent : Iboid
+public class Agent : IBoid
 {
     private Vector3 v_velocity;
     private Vector3 v_position;
@@ -25,11 +25,11 @@ public class Agent : Iboid
         set { f_mass = value; }
     }
 
-    public Agent(float mass)
+    public Agent(float m)
     {
         velocity = Vector3.zero;
         position = Vector3.zero;
-        mass = (mass <= 0) ? 1 : mass;
+        mass = (m == 0) ? 1 : m;
     }
 
     public void UpdateVelocity()

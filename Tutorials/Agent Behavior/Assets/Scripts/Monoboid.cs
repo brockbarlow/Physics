@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 
-public class Monoboid : MonoBehaviour
+public class MonoBoid : MonoBehaviour
 {
     public Agent agent;
-    public float mass;
+    [HideInInspector]public float mass;
 
-    void Awake()
+    public void Awake()
     {
         agent = new Agent(mass);
     }
 
-    void LateUpdate()
+    public void LateUpdate()
     {
         agent.UpdateVelocity();
         transform.position = agent.position;

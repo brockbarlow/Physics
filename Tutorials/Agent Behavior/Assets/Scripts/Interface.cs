@@ -2,7 +2,7 @@
 
 namespace Interface
 {
-    public interface Iboid
+    public interface IBoid
     {
         Vector3 velocity { get; set; }
         Vector3 position { get; set; }

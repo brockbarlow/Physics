@@ -99,15 +99,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4000013724842164, guid: 87bc98b8f6b19c84f9740839a016d4a8, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0.09322548
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000013724842164, guid: 87bc98b8f6b19c84f9740839a016d4a8, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -1.0112476
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000013724842164, guid: 87bc98b8f6b19c84f9740839a016d4a8, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -0.19340134
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000013724842164, guid: 87bc98b8f6b19c84f9740839a016d4a8, type: 2}
       propertyPath: m_LocalRotation.x
@@ -127,6 +127,16 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000013724842164, guid: 87bc98b8f6b19c84f9740839a016d4a8, type: 2}
       propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013727945284, guid: 87bc98b8f6b19c84f9740839a016d4a8,
+        type: 2}
+      propertyPath: cohesion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013727945284, guid: 87bc98b8f6b19c84f9740839a016d4a8,
+        type: 2}
+      propertyPath: maxSpeed
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
