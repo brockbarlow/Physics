@@ -8,17 +8,16 @@ public class BoidRules : MonoBehaviour
 
     public float targetRange;
     public float maxSpeed;
-    //public float boundries;
 
-    [Range(0, 100)]public int boidNumber;          //how many are created.
-    [Range(0, 100)]public float maxBoidDistance;   //how far are they when they spawn.
+    [Range(0, 100)]public int boidNumber;          
+    [Range(0, 100)]public float maxBoidDistance;   
 
-    [Range(0.0f, 1.0f)]public float cohesion;      //value that will be multiplied with the returning cohesion value.
-    [Range(0.0f, 1.0f)]public float dispersion;    //value that will be multiplied with the returning dispersion value.
-    [Range(0.0f, 1.0f)]public float alignment;     //value that will be multiplied with the returning alignment value.
+    [Range(0.0f, 1.0f)]public float cohesion;      
+    [Range(0.0f, 1.0f)]public float dispersion;    
+    [Range(0.0f, 1.0f)]public float alignment;     
     [Range(-1.0f, 1.0f)]public float tendency;
 
-    private List<BoidBehavior> boids;              //will hold the boids.
+    private List<BoidBehavior> boids;              
 
     private void Awake()
     {
@@ -46,11 +45,9 @@ public class BoidRules : MonoBehaviour
             Vector3 r1 = cohesionRule(b) * cohesion;
             Vector3 r2 = dispersionRule(b) * dispersion;
             Vector3 r3 = alignmentRule(b) * alignment;
-
             Vector3 tendTowards = tendTowardsPlace(b) * tendency;
-            //Vector3 wallBounds = walls(b);
 
-            b.velocity += (r1 + r2 + r3 /*+ wallBounds*/ + tendTowards) / b.mass;
+            b.velocity += (r1 + r2 + r3 + tendTowards) / b.mass;
             LimitVelocity(b);
         }
     }
@@ -127,26 +124,4 @@ public class BoidRules : MonoBehaviour
             b.velocity = (b.velocity / b.velocity.magnitude) * maxSpeed;
         }
     }
-
-    //private Vector3 walls(BoidBehavior b)
-    //{
-    //    Vector3 bounds = new Vector3();
-
-    //    if (b.transform.position.x > boundries)
-    //        bounds += new Vector3(-10, 0, 0);
-    //    else if (b.transform.position.x < -boundries)
-    //        bounds += new Vector3(10, 0, 0);
-
-    //    if (b.transform.position.y > boundries)
-    //        bounds += new Vector3(0, -10, 0);
-    //    else if (b.transform.position.y < -boundries)
-    //        bounds += new Vector3(0, 10, 0);
-
-    //    if (b.transform.position.z > boundries)
-    //        bounds += new Vector3(0, 0, -10);
-    //    else if (b.transform.position.z < -boundries)
-    //        bounds += new Vector3(0, 0, 10);
-
-    //    return bounds;
-    //}
 }
