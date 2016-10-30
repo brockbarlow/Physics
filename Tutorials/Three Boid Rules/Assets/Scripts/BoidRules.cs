@@ -8,6 +8,8 @@ public class BoidRules : MonoBehaviour
 
     public float targetRange;
     public float maxSpeed;
+    public float minMass;
+    public float maxMass;
 
     [Range(0, 100)]public int boidNumber;          
     [Range(0, 100)]public float maxBoidDistance;   
@@ -21,6 +23,9 @@ public class BoidRules : MonoBehaviour
 
     private void Awake()
     {
+        maxSpeed = (maxSpeed <= 0) ? 1 : maxSpeed;
+        targetRange = (targetRange <= 0) ? 20 : targetRange;
+
         boids = new List<BoidBehavior>();
         Vector3 pos = Vector3.zero;
         for (int i = 0; i < boidNumber; i++)
@@ -34,6 +39,7 @@ public class BoidRules : MonoBehaviour
 
             b.velocity = b.transform.position.normalized;
             b.transform.parent = transform;
+            b.mass = Random.Range(minMass, maxMass);
             boids.Add(b);
         }
     }
@@ -43,11 +49,11 @@ public class BoidRules : MonoBehaviour
         foreach (BoidBehavior b in boids)
         {
             Vector3 r1 = cohesionRule(b) * cohesion;
-            Vector3 r2 = dispersionRule(b) * dispersion;
+            Vector3 r2 = dispersionRule(b);
             Vector3 r3 = alignmentRule(b) * alignment;
             Vector3 tendTowards = tendTowardsPlace(b) * tendency;
 
-            b.velocity += (r1 + r2 + r3 + tendTowards) / b.mass;
+            b.velocity += ((r1 + r2 + r3 + tendTowards) / b.mass);
             LimitVelocity(b);
         }
     }
@@ -74,7 +80,7 @@ public class BoidRules : MonoBehaviour
 
         foreach (BoidBehavior bj in boids)
         {
-            if ((bj.transform.position - b.transform.position).magnitude <= 20  && bj != b) 
+            if ((bj.transform.position - b.transform.position).magnitude <= 20 * dispersion && bj != b) 
             {
                 c -= (bj.transform.position - b.transform.position); 
             }

@@ -23,7 +23,6 @@ GameObject:
   - 65: {fileID: 65000011748766494}
   - 23: {fileID: 23000013209523120}
   - 114: {fileID: 114000013727945284}
-  - 114: {fileID: 114000011083758982}
   m_Layer: 0
   m_Name: TargetRule
   m_TagString: Untagged
@@ -92,19 +91,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114000011083758982
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012270393184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15f7e463bee698a469bf0d6dbe73f7bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movement: {x: 0, y: 0, z: 0}
-  range: 10
 --- !u!114 &114000013727945284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -120,6 +106,8 @@ MonoBehaviour:
   target: {fileID: 4000013724842164}
   targetRange: 15
   maxSpeed: 2
+  minMass: 5
+  maxMass: 10
   boidNumber: 50
   maxBoidDistance: 50
   cohesion: 0

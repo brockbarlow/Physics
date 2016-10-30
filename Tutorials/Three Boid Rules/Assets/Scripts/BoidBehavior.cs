@@ -3,7 +3,7 @@
 public class BoidBehavior : MonoBehaviour
 {
     [HideInInspector]public Vector3 velocity;
-    public float mass;
+    [HideInInspector]public float mass;
 
     public void LateUpdate()
     {
