@@ -393,7 +393,7 @@ MonoBehaviour:
   target: {fileID: 1959286438}
   center: {fileID: 410765539}
   targetRange: 50
-  boundries: 80
+  boundries: 50
   maxSpeed: 1
   minMass: 10
   maxMass: 10
@@ -2045,7 +2045,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1750076491}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: -238.8}
+  m_LocalPosition: {x: 0, y: 5, z: -150}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -2359,7 +2359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {x: 0, y: 0, z: 0}
-  range: 84
+  range: 54
 --- !u!1 &2129660102
 GameObject:
   m_ObjectHideFlags: 0

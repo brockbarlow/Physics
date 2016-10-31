@@ -8,6 +8,5 @@ public class BoidBehavior : MonoBehaviour
     public void LateUpdate()
     {
         transform.position += velocity;
-        transform.forward = velocity.normalized;
     }
 }
