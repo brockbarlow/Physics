@@ -5,8 +5,10 @@ public class BoidRules : MonoBehaviour
 {
     public GameObject prefab;
     public Transform target;
+    public Transform center;
 
     public float targetRange;
+    public float boundries;
     public float maxSpeed;
     public float minMass;
     public float maxMass;
@@ -51,11 +53,13 @@ public class BoidRules : MonoBehaviour
             Vector3 r1 = cohesionRule(b) * cohesion;
             Vector3 r2 = dispersionRule(b);
             Vector3 r3 = alignmentRule(b) * alignment;
+            Vector3 walls = WallBoundries(b);
             Vector3 tendTowards = tendTowardsPlace(b) * tendency;
 
-            b.velocity += ((r1 + r2 + r3 + tendTowards) / b.mass);
+            b.velocity += ((r1 + r2 + r3 + walls + tendTowards) / b.mass);
             LimitVelocity(b);
         }
+        center.position = CenterOfMass();
     }
 
     private Vector3 cohesionRule(BoidBehavior b)
@@ -80,7 +84,7 @@ public class BoidRules : MonoBehaviour
 
         foreach (BoidBehavior bj in boids)
         {
-            if ((bj.transform.position - b.transform.position).magnitude <= 20 * dispersion && bj != b) 
+            if ((bj.transform.position - b.transform.position).magnitude <= 25 * dispersion && bj != b) 
             {
                 c -= (bj.transform.position - b.transform.position); 
             }
@@ -129,5 +133,40 @@ public class BoidRules : MonoBehaviour
         {
             b.velocity = (b.velocity / b.velocity.magnitude) * maxSpeed;
         }
+    }
+
+    private Vector3 WallBoundries(BoidBehavior b)
+    {
+        Vector3 bounds = new Vector3();
+
+        if (b.transform.position.x > boundries)
+            bounds += new Vector3(-10, 0, 0);
+        else if (b.transform.position.x < -boundries)
+            bounds += new Vector3(10, 0, 0);
+
+        if (b.transform.position.y > boundries)
+            bounds += new Vector3(0, -10, 0);
+        else if (b.transform.position.y < -boundries)
+            bounds += new Vector3(0, 10, 0);
+
+        if (b.transform.position.z > boundries)
+            bounds += new Vector3(0, 0, -10);
+        else if (b.transform.position.z < -boundries)
+            bounds += new Vector3(0, 0, 10);
+
+        return bounds;
+    }
+
+    private Vector3 CenterOfMass()
+    {
+        Vector3 centerMass = Vector3.zero;
+        Vector3 positions = Vector3.zero;
+        foreach (BoidBehavior b in boids)
+        {
+            positions += b.transform.position;
+        }
+
+        centerMass = positions / boids.Count;
+        return centerMass;
     }
 }

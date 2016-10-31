@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class SliderControls : MonoBehaviour
 {
     public List<BoidRules> boidRules;
-    public GameObject temp;
     public Slider cohesion;
     public Slider dispension;
     public Slider alignment;
