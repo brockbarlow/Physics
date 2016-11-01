@@ -8,6 +8,7 @@ public class Controls : MonoBehaviour
     public float dampingFactor; //kd
     public float restLength; //lo
     public float gravity;
+    public float spacing;
     public int width;
     public int height;
     private List<MonoParticle> particles;
@@ -50,10 +51,10 @@ public class Controls : MonoBehaviour
                 MonoParticle mp = temp.GetComponent<MonoParticle>();
                 mp.particle = new Particle(new Vector3(x, y, 0), new Vector3(0, 0, 0), 10);
                 particles.Add(temp.GetComponent<MonoParticle>());
-                x += 1f;
+                x += 1f + spacing;
             }
             x = 0f;
-            y += 1f;
+            y += 1f + spacing;
         }
     }
 }
