@@ -2,16 +2,35 @@
 
 public class Particle
 {
-    public Vector3 r; //position;
-    public Vector3 v; //velocity;
-    public Vector3 a; //acceleration; //a = (1 / m) * f;
-    public float m; //mass;
-    public Vector3 p; //momentum; //p = m * v;
-    public Vector3 f; //force;
-    public float v1D; //1D velocities; //v = e * v;
+    public Vector3 position; //r;
+    public Vector3 velocity; //v;
+    public float mass; //m;
+    public Vector3 steering;
 
-    public void Update()
+    public Particle() //default constructor
     {
-        //f = 
+
+    }
+
+    public Particle(Vector3 r, Vector3 v, float m) //custom constructor
+    {              //position,  velocity,  mass
+        position = Vector3.zero;
+        velocity = Vector3.zero;
+        mass = (m == 0) ? 1 : m;
+        steering = Vector3.zero;
+        position = r;
+        velocity = v;
+    }
+
+    public Vector3 UpdateParticle(float g)
+    {                            //gravity
+        steering += new Vector3(0, -9.8f * g, 0);
+        velocity += steering / mass;
+        if (velocity.magnitude > 3)
+        {
+            velocity = velocity.normalized;
+        }
+        position += velocity;
+        return position;
     }
 }
