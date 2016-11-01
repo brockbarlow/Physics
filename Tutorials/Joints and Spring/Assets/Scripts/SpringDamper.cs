@@ -1,23 +1,20 @@
 ﻿using UnityEngine;
+using System;
 
+[Serializable]
 public class SpringDamper
 {
+    public Particle p1, p2;
     public float springConstant; //ks;
     public float dampingFactor; //kd;
     public float restLength; //lo;
-    public Particle P1, P2; 
-    public Vector3 springForce1; //f(sd)e;
-    public Vector3 springForce2; //-f1;
 
-    public SpringDamper() //default constructor;
-    {
+    public SpringDamper() { } //default constructor;
 
-    }
-
-    public SpringDamper(Particle one, Particle two, float ks, float kd, float lo) //custom constructor
-    {
-        P1 = one;
-        P2 = two;
+    public SpringDamper(Particle P1, Particle P2, float ks, float kd, float lo) //custom constructor
+    {                                    //spring constant, damping factor, rest length
+        p1 = P1;
+        p2 = P2;
         springConstant = ks;
         dampingFactor = kd;
         restLength = lo;
@@ -25,21 +22,18 @@ public class SpringDamper
 
     public void ComputeForce()
     {
-        Vector3 eStar = (P2.position - P1.position); //e*
-        float l = eStar.magnitude; //|e|
-        Vector3 e = (eStar / l);
+        Vector3 eStar = (p2.Position - p1.Position);
+        Vector3 e = eStar.normalized;
 
-        float P1vec1D = Vector3.Dot(e, P1.velocity); //finding 1D vector;
-        float P2vec1D = Vector3.Dot(e, P2.velocity); //finding 1D vector;
+        float p1V1D = Vector3.Dot(e, p1.Velocity); 
+        float p2V1D = Vector3.Dot(e, p2.Velocity); 
 
-        float springForceLinear = -(springConstant) * (restLength - l);
-        float springDamper = dampingFactor * (P1vec1D - P2vec1D);
-        float springDamperForce = springForceLinear - springDamper;
+        float springForceLinear = -springConstant * (restLength - eStar.magnitude);
+        float dampingForceLinear = -dampingFactor * (p1V1D - p2V1D);
 
-        springForce1 = springDamperForce * e;
-        springForce2 = -(springForce1);
+        Vector3 springForce = (springForceLinear + dampingForceLinear) * e;
 
-        P1.steering += springForce1;
-        P2.steering += springForce2;
+        p1.AddForce(springForce);
+        p2.AddForce(-springForce);
     }
 }

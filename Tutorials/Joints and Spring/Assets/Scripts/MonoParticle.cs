@@ -6,6 +6,6 @@ public class MonoParticle : MonoBehaviour
 
     public void LateUpdate()
     {
-        transform.position = particle.position;
+        transform.position = particle.Position;
     }
 }

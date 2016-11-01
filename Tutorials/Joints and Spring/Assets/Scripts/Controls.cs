@@ -20,13 +20,14 @@ public class Controls : MonoBehaviour
         springDampers = new List<SpringDamper>();
 
         SpawnParticles(width, height);
+        SetSpringDampers();
     }
 
     public void FixedUpdate()
     {
         foreach (MonoParticle mp in particles)
         { //for each particle: apply gravity
-            mp.particle.UpdateParticle(gravity);
+            mp.particle.Update();
         }
         foreach (SpringDamper sd in springDampers)
         { //for each spring-damper: compute & apply forces
@@ -56,5 +57,10 @@ public class Controls : MonoBehaviour
             x = 0f;
             y += 1f + spacing;
         }
+    }
+
+    public void SetSpringDampers()
+    {
+
     }
 }
