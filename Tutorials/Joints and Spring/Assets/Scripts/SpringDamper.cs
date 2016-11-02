@@ -22,17 +22,13 @@ public class SpringDamper
 
     public void ComputeForce()
     {
-        Vector3 eStar = (p2.Position - p1.Position);
-        Vector3 e = eStar.normalized;
-
-        float p1V1D = Vector3.Dot(e, p1.Velocity); 
-        float p2V1D = Vector3.Dot(e, p2.Velocity); 
-
-        float springForceLinear = -springConstant * (restLength - eStar.magnitude);
+        Vector3 dist = (p2.position - p1.position);
+        Vector3 e = dist / dist.magnitude;
+        float p1V1D = Vector3.Dot(e, p1.velocity); 
+        float p2V1D = Vector3.Dot(e, p2.velocity); 
+        float springForceLinear = -springConstant * (restLength - dist.magnitude);
         float dampingForceLinear = -dampingFactor * (p1V1D - p2V1D);
-
         Vector3 springForce = (springForceLinear + dampingForceLinear) * e;
-
         p1.AddForce(springForce);
         p2.AddForce(-springForce);
     }

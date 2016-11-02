@@ -1,11 +1,17 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class MonoParticle : MonoBehaviour
 {
-    public Particle particle;
+    [HideInInspector]public Particle particle;
+    [HideInInspector]public bool anchor;
+    [HideInInspector]public List<MonoParticle> neighbors;
 
     public void LateUpdate()
     {
-        transform.position = particle.Position;
+        foreach (MonoParticle mp in neighbors)
+        {
+            Debug.DrawLine(transform.position, mp.transform.position, Color.black);
+        }
     }
 }
