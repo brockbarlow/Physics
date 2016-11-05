@@ -22,7 +22,7 @@ GameObject:
   - 33: {fileID: 33000013108672784}
   - 135: {fileID: 135000012581852060}
   - 23: {fileID: 23000014052499280}
-  - 114: {fileID: 114000013001346602}
+  - 114: {fileID: 114000010922962758}
   m_Layer: 0
   m_Name: Particle
   m_TagString: Untagged
@@ -79,7 +79,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013379872972}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114000013001346602
+--- !u!114 &114000010922962758
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -90,14 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0c6efa443a62e7408dd856739ad01b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particle:
-    position: {x: 0, y: 0, z: 0}
-    velocity: {x: 0, y: 0, z: 0}
-    acceleration: {x: 0, y: 0, z: 0}
-    force: {x: 0, y: 0, z: 0}
-    mass: 0
-  anchor: 0
-  neighbors: []
+  anchorPoints: 0
 --- !u!135 &135000012581852060
 SphereCollider:
   m_ObjectHideFlags: 1

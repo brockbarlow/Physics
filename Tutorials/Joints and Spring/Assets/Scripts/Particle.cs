@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System;
+using System.Collections.Generic;
 
-[Serializable]
 public class Particle
 {
     [HideInInspector]public Vector3 position; //r;
@@ -9,6 +8,7 @@ public class Particle
     [HideInInspector]public Vector3 acceleration; //a; //a = (1 / m) * f;
     [HideInInspector]public Vector3 force; //f;
     [HideInInspector]public float mass; //m;
+    public List<Particle> particles;
 
     public Particle() { } //default constructor
 

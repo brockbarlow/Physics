@@ -1,20 +1,18 @@
 ﻿using UnityEngine;
-using System;
 
-[Serializable]
 public class SpringDamper
 {
-    public Particle p1, p2;
+    public Particle P1, P2;
     public float springConstant; //ks;
     public float dampingFactor; //kd;
     public float restLength; //lo;
 
     public SpringDamper() { } //default constructor;
 
-    public SpringDamper(Particle P1, Particle P2, float ks, float kd, float lo) //custom constructor
+    public SpringDamper(Particle one, Particle two, float ks, float kd, float lo) //custom constructor
     {                                    //spring constant, damping factor, rest length
-        p1 = P1;
-        p2 = P2;
+        P1 = one;
+        P2 = two;
         springConstant = ks;
         dampingFactor = kd;
         restLength = lo;
@@ -22,14 +20,14 @@ public class SpringDamper
 
     public void ComputeForce()
     {
-        Vector3 dist = (p2.position - p1.position);
+        Vector3 dist = (P2.position - P1.position); //e*
         Vector3 e = dist / dist.magnitude;
-        float p1V1D = Vector3.Dot(e, p1.velocity); 
-        float p2V1D = Vector3.Dot(e, p2.velocity); 
-        float springForceLinear = -springConstant * (restLength - dist.magnitude);
-        float dampingForceLinear = -dampingFactor * (p1V1D - p2V1D);
-        Vector3 springForce = (springForceLinear + dampingForceLinear) * e;
-        p1.AddForce(springForce);
-        p2.AddForce(-springForce);
+        float p1V1D = Vector3.Dot(e, P1.velocity); //p1's 1D vector
+        float p2V1D = Vector3.Dot(e, P2.velocity); //p2's 1D vector
+        float springForceLinear = -springConstant * (restLength - dist.magnitude); //fs
+        float dampingForceLinear = -dampingFactor * (p1V1D - p2V1D); //fd
+        Vector3 springForce = (springForceLinear + dampingForceLinear) * e; //fs + fd * e
+        P1.AddForce(springForce); //f1
+        P2.AddForce(-springForce); //-f1
     }
 }
