@@ -26,8 +26,8 @@ public class SpringDamper
         float p2V1D = Vector3.Dot(e, P2.velocity); //p2's 1D vector
         float springForceLinear = -springConstant * (restLength - dist.magnitude); //fs
         float dampingForceLinear = -dampingFactor * (p1V1D - p2V1D); //fd
-        Vector3 springForce = (springForceLinear + dampingForceLinear) * e; //fs + fd * e
-        P1.AddForce(springForce); //f1
-        P2.AddForce(-springForce); //-f1
+        Vector3 springDampingForce = (springForceLinear + dampingForceLinear) * e; //fs + fd * e
+        P1.AddForce(springDampingForce); //f1
+        P2.AddForce(-springDampingForce); //-f1
     }
 }

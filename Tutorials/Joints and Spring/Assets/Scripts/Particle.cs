@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 public class Particle
 {
-    [HideInInspector]public Vector3 position; //r;
-    [HideInInspector]public Vector3 velocity; //v;
-    [HideInInspector]public Vector3 acceleration; //a; //a = (1 / m) * f;
-    [HideInInspector]public Vector3 force; //f;
-    [HideInInspector]public float mass; //m;
+    public Vector3 position; //r;
+    public Vector3 velocity; //v;
+    public Vector3 acceleration; //a; //a = (1 / m) * f;
+    public Vector3 force; //f;
+    public float mass; //m;
     public List<Particle> particles;
 
     public Particle() { } //default constructor
@@ -15,11 +15,11 @@ public class Particle
     public Particle(Vector3 r, Vector3 v, float m) //custom constructor
     {             //position,   velocity,   mass
         position = Vector3.zero;
-        position = r;
         velocity = Vector3.zero;
-        velocity = v;
-        mass = m;
         force = Vector3.zero;
+        position = r;
+        velocity = v;
+        mass = (m <= 0) ? 1 : m;
     }
 
     public void AddForce(Vector3 f)
@@ -27,7 +27,7 @@ public class Particle
         force += f;
     }
 
-    public Vector3 Update()
+    public Vector3 UpdateParticle()
     {  
         acceleration = (1f / mass) * force;
         velocity += acceleration * Time.fixedDeltaTime;
