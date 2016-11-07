@@ -32,6 +32,7 @@ public class Particle
         acceleration = (1f / mass) * force;
         velocity += acceleration * Time.fixedDeltaTime;
         position += velocity * Time.fixedDeltaTime;
+
         return position;
     }
 }

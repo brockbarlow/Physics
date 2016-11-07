@@ -30,4 +30,22 @@ public class SpringDamper
         P1.AddForce(springDampingForce); //f1
         P2.AddForce(-springDampingForce); //-f1
     }
+
+    public bool threadTearing(float tf)
+    {
+        if ((P2.position - P1.position).magnitude > restLength * tf)
+        {
+            if (P2.particles.Contains(P1))
+            {
+                P2.particles.Remove(P1);
+            }
+
+            if (P1.particles.Contains(P2))
+            {
+                P1.particles.Remove(P2);
+            }
+            return true;
+        }
+        return false;
+    }
 }

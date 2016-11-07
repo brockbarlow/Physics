@@ -3,7 +3,7 @@
 public class MonoParticle : MonoBehaviour
 {
     public Particle particle;
-    [HideInInspector]public bool anchorPoint;
+    public bool anchorPoint;
 
     public void LateUpdate()
     {

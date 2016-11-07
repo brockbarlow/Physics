@@ -30,12 +30,14 @@ public class Triangle
         Vector3 surface = ((TP1.velocity + TP2.velocity + TP3.velocity) / 3);
         averageVelocity = surface - air;
         surfaceNormal = Vector3.Cross((TP2.position - TP1.position), (TP3.position - TP1.position)) / Vector3.Cross((TP2.position - TP1.position), (TP3.position - TP1.position)).magnitude;
+
         float ao = (1f / 2f) * Vector3.Cross((TP2.position - TP1.position), (TP3.position - TP1.position)).magnitude;
         areaOfTriangle = ao * (Vector3.Dot(averageVelocity, surfaceNormal) / averageVelocity.magnitude);
         Vector3 aeroForce = -(1f / 2f) * 1f * Mathf.Pow(averageVelocity.magnitude, 2) * 1f * areaOfTriangle * surfaceNormal;
         TP1.AddForce(aeroForce / 3);
         TP2.AddForce(aeroForce / 3);
         TP3.AddForce(aeroForce / 3);
+
         return true;
     }
 }
