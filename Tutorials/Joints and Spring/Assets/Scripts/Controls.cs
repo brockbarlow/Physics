@@ -148,6 +148,8 @@ public class Controls : MonoBehaviour
         }
         monoparticles[monoparticles.Count - 1].anchorPoint = true;
         monoparticles[monoparticles.Count - w].anchorPoint = true;
+        monoparticles[0].anchorPoint = true;
+        monoparticles[width - 1].anchorPoint = true;
     }
 
     public void SetSpringDampers()
