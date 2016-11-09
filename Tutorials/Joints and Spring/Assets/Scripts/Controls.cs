@@ -7,30 +7,36 @@ public class Controls : MonoBehaviour
     [HideInInspector]public List<MonoParticle> monoparticles;
     public List<SpringDamper> springDampers;
     public List<Triangle> triangles;
+    public List<GameObject> drawers;
     public GameObject prefab;
+    public GameObject prefabDamper;
+    public Material lineColor;
     public int width;
     public int height;
     public float spacing; //adds a space between the points
     public float mass;
-    public float gravity;
-    [Range(4f, 100f)]public float springConstant; //ks //set between 0 to 100;
+    [Range(0f, 5f)]public float gravity; //set between 0 to 5
+    [Range(0f, 100f)]public float springConstant; //ks //set between 0 to 100;
     [Range(0f, 10f)]public float dampingFactor; //kd //set between 0 to 10;
     [Range(1f, 5f)]public float restLength; //lo //set between 1 to 5;
-    [Range(0.01f, 10f)]public float windStrength; //set between 0.01 to 10;
+    [Range(0f, 10f)]public float windStrength; //set between 0 to 10;
     public bool wind;
-    public float tearFactor;
+    [Range(0f, 10f)]public float tearFactor; //set between 0 to 10
     public float boundries;
+    public Slider gravitySlider;
     public Slider springConstantSlider;
     public Slider dampingFactorSlider;
     public Slider restLengthSlider;
     public Slider windStrengthSlider;
     public Toggle windToggle;
+    public Slider tearFactorSlider;
 
     public void Awake()
     {
         monoparticles = new List<MonoParticle>();
         springDampers = new List<SpringDamper>();
         triangles = new List<Triangle>();
+        drawers = new List<GameObject>();
         SpawnParticles(width, height);
         SetSpringDampers();
         SetTriangles();
@@ -38,22 +44,28 @@ public class Controls : MonoBehaviour
 
     public void Start()
     {
+        gravitySlider.value = 5f;
         springConstantSlider.value = 100f;
         dampingFactorSlider.value = 10f;
         restLengthSlider.value = 2f;
         windStrengthSlider.value = 0f;
+        tearFactorSlider.value = 10f;
+        gravity = gravitySlider.value;
         springConstant = springConstantSlider.value;
         dampingFactor = dampingFactorSlider.value;
         restLength = restLengthSlider.value;
         windStrength = windStrengthSlider.value;
+        tearFactor = tearFactorSlider.value;
     }
 
     public void Update()
     {
+        gravity = gravitySlider.value;
         springConstant = springConstantSlider.value;
         dampingFactor = dampingFactorSlider.value;
         restLength = restLengthSlider.value;
         windStrength = windStrengthSlider.value;
+        tearFactor = tearFactorSlider.value;
     }
 
     public void FixedUpdate()
@@ -91,6 +103,8 @@ public class Controls : MonoBehaviour
             sd.ComputeForce();
             if (sd.threadTearing(tearFactor) || (sd.P1 == null || sd.P2 == null))
             {
+                Destroy(drawers[springDampers.IndexOf(sd)]);
+                drawers.Remove(drawers[springDampers.IndexOf(sd)]);
                 springDampers.Remove(sd);
             }
         }
@@ -123,6 +137,24 @@ public class Controls : MonoBehaviour
             else
             {
                 mp.particle.position = mp.transform.position;
+            }
+        }
+    }
+
+    public void LateUpdate()
+    {
+        List<GameObject> tempSpringDampers = new List<GameObject>();
+        foreach (GameObject go in drawers)
+        {
+            tempSpringDampers.Add(go);
+        }
+        for (int i = 0; i < tempSpringDampers.Count; i++)
+        {
+            if (tempSpringDampers[i] != null)
+            {
+                LineRenderer lr = tempSpringDampers[i].GetComponent<LineRenderer>();
+                lr.SetPosition(0, springDampers[i].P1.position);
+                lr.SetPosition(1, springDampers[i].P2.position);
             }
         }
     }
@@ -163,6 +195,7 @@ public class Controls : MonoBehaviour
             { //creates a horizontal line
                 mp.particle.particles.Add(monoparticles[index + 1].particle);
                 SpringDamper sd = new SpringDamper(mp.particle, monoparticles[index + 1].particle, springConstant, dampingFactor, restLength);
+                drawers.Add(CreateDrawer(sd));
                 springDampers.Add(sd);
             }
 
@@ -170,6 +203,7 @@ public class Controls : MonoBehaviour
             { //created a vertical line
                 mp.particle.particles.Add(monoparticles[index + width].particle);
                 SpringDamper sd = new SpringDamper(mp.particle, monoparticles[index + width].particle, springConstant, dampingFactor, restLength);
+                drawers.Add(CreateDrawer(sd));
                 springDampers.Add(sd);
             }
 
@@ -177,6 +211,7 @@ public class Controls : MonoBehaviour
             {
                 mp.particle.particles.Add(monoparticles[index + width - 1].particle);
                 SpringDamper sd = new SpringDamper(mp.particle, monoparticles[index + width - 1].particle, springConstant, dampingFactor, restLength);
+                drawers.Add(CreateDrawer(sd));
                 springDampers.Add(sd);
             }
 
@@ -184,6 +219,7 @@ public class Controls : MonoBehaviour
             {
                 mp.particle.particles.Add(monoparticles[index + width + 1].particle);
                 SpringDamper sd = new SpringDamper(mp.particle, monoparticles[index + width + 1].particle, springConstant, dampingFactor, restLength);
+                drawers.Add(CreateDrawer(sd));
                 springDampers.Add(sd);
             }
         }
@@ -260,6 +296,15 @@ public class Controls : MonoBehaviour
             }
         }
         return index;
+    }
+
+    public GameObject CreateDrawer(SpringDamper sd)
+    {
+        GameObject drawerGO = Instantiate(prefabDamper, (sd.P1.position + sd.P2.position) / 2f, new Quaternion()) as GameObject;
+        LineRenderer lr = drawerGO.GetComponent<LineRenderer>();
+        lr.materials[0] = lineColor;
+        lr.SetWidth(.1f, .1f);
+        return drawerGO;
     }
 
     public Vector3 WallBoundries(MonoParticle mp)
