@@ -7,26 +7,24 @@ public class Controls : MonoBehaviour
     [HideInInspector]public List<MonoParticle> monoparticles;
     public List<SpringDamper> springDampers;
     public List<Triangle> triangles;
-    public List<GameObject> drawers;
+    [HideInInspector]public List<GameObject> drawers;
     public GameObject prefab;
     public GameObject prefabDamper;
-    public Material lineColor;
     public int width;
     public int height;
     public float spacing; //adds a space between the points
     public float mass;
-    [Range(0f, 5f)]public float gravity; //set between 0 to 5
+    [Range(-5f, 5f)]public float gravity; //set between 0 to 5
     [Range(0f, 100f)]public float springConstant; //ks //set between 0 to 100;
     [Range(0f, 10f)]public float dampingFactor; //kd //set between 0 to 10;
-    [Range(1f, 5f)]public float restLength; //lo //set between 1 to 5;
+    public float restLength; //lo //DO NOT MODIFY THIS VALUE;
     [Range(0f, 10f)]public float windStrength; //set between 0 to 10;
     public bool wind;
-    [Range(0f, 10f)]public float tearFactor; //set between 0 to 10
+    [Range(0f, 20f)]public float tearFactor; //set between 0 to 10
     public float boundries;
     public Slider gravitySlider;
     public Slider springConstantSlider;
     public Slider dampingFactorSlider;
-    public Slider restLengthSlider;
     public Slider windStrengthSlider;
     public Toggle windToggle;
     public Slider tearFactorSlider;
@@ -47,13 +45,11 @@ public class Controls : MonoBehaviour
         gravitySlider.value = 5f;
         springConstantSlider.value = 100f;
         dampingFactorSlider.value = 10f;
-        restLengthSlider.value = 2f;
         windStrengthSlider.value = 0f;
         tearFactorSlider.value = 10f;
         gravity = gravitySlider.value;
         springConstant = springConstantSlider.value;
         dampingFactor = dampingFactorSlider.value;
-        restLength = restLengthSlider.value;
         windStrength = windStrengthSlider.value;
         tearFactor = tearFactorSlider.value;
     }
@@ -63,7 +59,6 @@ public class Controls : MonoBehaviour
         gravity = gravitySlider.value;
         springConstant = springConstantSlider.value;
         dampingFactor = dampingFactorSlider.value;
-        restLength = restLengthSlider.value;
         windStrength = windStrengthSlider.value;
         tearFactor = tearFactorSlider.value;
     }
@@ -302,7 +297,7 @@ public class Controls : MonoBehaviour
     {
         GameObject drawerGO = Instantiate(prefabDamper, (sd.P1.position + sd.P2.position) / 2f, new Quaternion()) as GameObject;
         LineRenderer lr = drawerGO.GetComponent<LineRenderer>();
-        lr.materials[0] = lineColor;
+        lr.materials[0].color = Color.black;
         lr.SetWidth(.1f, .1f);
         return drawerGO;
     }
