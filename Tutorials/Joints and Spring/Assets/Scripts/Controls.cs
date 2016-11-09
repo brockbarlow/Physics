@@ -10,17 +10,18 @@ public class Controls : MonoBehaviour
     [HideInInspector]public List<GameObject> drawers;
     public GameObject prefab;
     public GameObject prefabDamper;
+    public GameObject prefabCamera;
     public int width;
     public int height;
     public float spacing; //adds a space between the points
     public float mass;
-    [Range(-5f, 5f)]public float gravity; //set between 0 to 5
-    [Range(0f, 100f)]public float springConstant; //ks //set between 0 to 100;
-    [Range(0f, 10f)]public float dampingFactor; //kd //set between 0 to 10;
-    public float restLength; //lo //DO NOT MODIFY THIS VALUE;
-    [Range(0f, 10f)]public float windStrength; //set between 0 to 10;
+    [Range(-5f, 5f)]public float gravity; 
+    [Range(0f, 100f)]public float springConstant; //ks 
+    [Range(0f, 10f)]public float dampingFactor; //kd 
+    public float restLength; //lo //DO NOT LET USER MODIFY THIS VALUE;
+    [Range(0f, 10f)]public float windStrength; 
     public bool wind;
-    [Range(0f, 20f)]public float tearFactor; //set between 0 to 10
+    [Range(0f, 20f)]public float tearFactor; 
     public float boundries;
     public Slider gravitySlider;
     public Slider springConstantSlider;
@@ -38,6 +39,17 @@ public class Controls : MonoBehaviour
         SpawnParticles(width, height);
         SetSpringDampers();
         SetTriangles();
+        Vector3 total = Vector3.zero;
+
+        foreach (MonoParticle mp in monoparticles)
+        {
+            total += mp.particle.position;
+        }
+        total = total / monoparticles.Count;
+        total.x = 3.67f;
+        total.y = 0f;
+        total.z = -47.48f;
+        prefabCamera.transform.position = total;
     }
 
     public void Start()
