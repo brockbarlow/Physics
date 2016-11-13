@@ -22,12 +22,20 @@ public class MouseInteraction : MonoBehaviour
 
     public void LateUpdate()
     {
-        if (Input.GetMouseButton(0) && current != null)
+        if (Input.GetMouseButtonDown(1) && ShootRay().GetComponent<MonoParticle>() != null)
         {
+            current = ShootRay();
+        }
+        if (Input.GetMouseButton(1) && current != null)
+        {
+            current.GetComponent<MonoParticle>().particle.force = Vector3.zero;
+            current.GetComponent<MonoParticle>().particle.velocity = Vector3.zero;
+
             Vector3 mouse = Input.mousePosition;
             mouse.z = -Camera.main.transform.position.z;
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(mouse);
             worldPos.z = current.transform.position.z;
+            current.GetComponent<MonoParticle>().particle.position = worldPos;
             current.transform.position = worldPos;
         }
     }

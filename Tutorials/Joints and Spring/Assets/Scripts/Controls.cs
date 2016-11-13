@@ -22,7 +22,6 @@ public class Controls : MonoBehaviour
     [Range(0f, 10f)]public float windStrength; 
     public bool wind;
     [Range(0f, 20f)]public float tearFactor; 
-    public float boundries;
     public Slider gravitySlider;
     public Slider springConstantSlider;
     public Slider dampingFactorSlider;
@@ -80,12 +79,6 @@ public class Controls : MonoBehaviour
         List<SpringDamper> tempSpringDampers = new List<SpringDamper>();
         List<Triangle> tempTriangles = new List<Triangle>();
 
-        foreach (MonoParticle mp in monoparticles)
-        {
-            Vector3 walls = WallBoundries(mp);
-            mp.particle.velocity += walls / mp.particle.mass;
-        }
-
         foreach (SpringDamper sd in springDampers)
         {
             tempSpringDampers.Add(sd);
@@ -137,6 +130,42 @@ public class Controls : MonoBehaviour
 
         foreach (MonoParticle mp in monoparticles)
         {
+            if (Camera.main.WorldToScreenPoint(mp.particle.position).y <= 10f)  //Floor
+            {
+                if (mp.particle.force.y < 0f)
+                {
+                    mp.particle.force.y = 0;
+                }
+                mp.particle.velocity = -mp.particle.velocity * .65f;
+            }
+
+            if (Camera.main.WorldToScreenPoint(mp.particle.position).y > Screen.height - 10f)  //Ceiling
+            {
+                if (mp.particle.force.y > 0f)
+                {
+                    mp.particle.force.y = 0;
+                }  
+                mp.particle.velocity = -mp.particle.velocity * .65f;
+            }
+
+            if (Camera.main.WorldToScreenPoint(mp.particle.position).x < 10f)    //Wall
+            {
+                if (mp.particle.force.x < 0f)
+                {
+                    mp.particle.force.x = 0;
+                }
+                mp.particle.velocity = -mp.particle.velocity;
+            }
+
+            if (Camera.main.WorldToScreenPoint(mp.particle.position).x > Screen.width - 10f)    //Wall
+            {
+                if (mp.particle.force.x > 0f)
+                {
+                    mp.particle.force.x = 0;
+                } 
+                mp.particle.velocity = -mp.particle.velocity * .65f;
+            }
+
             if (mp.anchorPoint == false)
             {
                 mp.transform.position = mp.particle.UpdateParticle();
@@ -312,27 +341,5 @@ public class Controls : MonoBehaviour
         lr.materials[0].color = Color.black;
         lr.SetWidth(.1f, .1f);
         return drawerGO;
-    }
-
-    public Vector3 WallBoundries(MonoParticle mp)
-    {
-        Vector3 bounds = new Vector3();
-
-        if (mp.transform.position.x > boundries)
-            bounds += new Vector3(-10, 0, 0);
-        else if (mp.transform.position.x < -boundries)
-            bounds += new Vector3(10, 0, 0);
-
-        if (mp.transform.position.y > boundries)
-            bounds += new Vector3(0, -10, 0);
-        else if (mp.transform.position.y < -boundries)
-            bounds += new Vector3(0, 10, 0);
-
-        if (mp.transform.position.z > boundries)
-            bounds += new Vector3(0, 0, -10);
-        else if (mp.transform.position.z < -boundries)
-            bounds += new Vector3(0, 0, 10);
-
-        return bounds;
     }
 }
