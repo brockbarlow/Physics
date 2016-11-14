@@ -19,11 +19,11 @@ public class Controls : MonoBehaviour
     public float spacing; //adds a space between the points
     public float mass; 
 
-    [Range(-5f, 5f)]public float gravity; 
+    [Range(-25f, 25f)]public float gravity; 
     [Range(0f, 100f)]public float springConstant; //ks 
     [Range(0f, 10f)]public float dampingFactor; //kd 
     public float restLength; //lo //DO NOT LET USER MODIFY THIS VALUE;
-    [Range(0f, 10f)]public float windStrength; //how strong the wind is
+    [Range(0f, 35f)]public float windStrength; //how strong the wind is
     public bool wind; //turns wind on/off
     [Range(0f, 20f)]public float tearFactor; //how strong the lines/bounds are
 
@@ -64,7 +64,7 @@ public class Controls : MonoBehaviour
 
     public void Start()
     {   //set the slider values
-        gravitySlider.value = 5f;
+        gravitySlider.value = 25f;
         springConstantSlider.value = 100f;
         dampingFactorSlider.value = 10f;
         windStrengthSlider.value = 0f;
