@@ -6,7 +6,7 @@ public class MouseInteraction : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetMouseButtonDown(0)) //MouseButtonDown(0) refers to the left mouse.
+        if (Input.GetMouseButtonDown(1)) //MouseButtonDown(1) refers to the right mouse button.
         {
             if (ShootRay() != null && ShootRay().GetComponent<MonoParticle>() != null) //as long shootray does not equal null...
             {
@@ -22,11 +22,11 @@ public class MouseInteraction : MonoBehaviour
 
     public void LateUpdate()
     {
-        if (Input.GetMouseButtonDown(1) && ShootRay().GetComponent<MonoParticle>() != null) //MouseButtonDown(1) refers to the right mouse.
+        if (Input.GetMouseButtonDown(0) && ShootRay().GetComponent<MonoParticle>() != null) //MouseButtonDown(0) refers to the left mouse button.
         { //if user is pressing right mouse button and shootray does not equal null...
             current = ShootRay(); //current will receive shootray value
         }
-        if (Input.GetMouseButton(1) && current != null) //if user is pressing right mouse button and current does not equal null...
+        if (Input.GetMouseButton(0) && current != null) //if user is pressing right mouse button and current does not equal null...
         {
             current.GetComponent<MonoParticle>().particle.force = Vector3.zero; //this force equals a new vector3(0,0,0)
             current.GetComponent<MonoParticle>().particle.velocity = Vector3.zero; //this velocity equals a new vector3(0,0,0)

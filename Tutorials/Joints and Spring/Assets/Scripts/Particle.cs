@@ -31,6 +31,7 @@ public class Particle
     {  
         acceleration = (1f / mass) * force; //formula for acceleration
         velocity += acceleration * Time.fixedDeltaTime; //adds this result to velocity
+        velocity = Vector3.ClampMagnitude(velocity, velocity.magnitude); //clamp the velocity (sets it).
         position += velocity * Time.fixedDeltaTime; //adds this result to position
         //fixedDeltaTime is affected by the settings of the physics simulation. it runs at a (more or less) fixed interval and is not affected
         //by inefficiencies in code.

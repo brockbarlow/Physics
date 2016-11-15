@@ -19,16 +19,15 @@ public class Controls : MonoBehaviour
     public float spacing; //adds a space between the points
     public float mass; 
 
-    [Range(-25f, 25f)]public float gravity; 
+    public float gravity; 
     [Range(0f, 100f)]public float springConstant; //ks 
     [Range(0f, 10f)]public float dampingFactor; //kd 
     public float restLength; //lo //DO NOT LET USER MODIFY THIS VALUE;
-    [Range(0f, 35f)]public float windStrength; //how strong the wind is
+    [Range(0f, 15f)]public float windStrength; //how strong the wind is
     public bool wind; //turns wind on/off
-    [Range(0f, 20f)]public float tearFactor; //how strong the lines/bounds are
+    [Range(0.01f, 10f)]public float tearFactor; //how strong the lines/bounds are
 
     //ui sliders and toggle objects
-    public Slider gravitySlider;
     public Slider springConstantSlider;
     public Slider dampingFactorSlider;
     public Slider windStrengthSlider;
@@ -64,14 +63,12 @@ public class Controls : MonoBehaviour
 
     public void Start()
     {   //set the slider values
-        gravitySlider.value = 25f;
         springConstantSlider.value = 100f;
         dampingFactorSlider.value = 10f;
         windStrengthSlider.value = 0f;
         tearFactorSlider.value = 10f;
 
         //these variables will equal the slider values
-        gravity = gravitySlider.value;
         springConstant = springConstantSlider.value;
         dampingFactor = dampingFactorSlider.value;
         windStrength = windStrengthSlider.value;
@@ -80,7 +77,6 @@ public class Controls : MonoBehaviour
 
     public void Update()
     {   //update these variables with the slider values
-        gravity = gravitySlider.value;
         springConstant = springConstantSlider.value;
         dampingFactor = dampingFactorSlider.value;
         windStrength = windStrengthSlider.value;
@@ -231,7 +227,7 @@ public class Controls : MonoBehaviour
             {   
                 GameObject temp = Instantiate(prefab, new Vector3(x, y, 0), new Quaternion()) as GameObject; //instantiate game object
                 MonoParticle mp = temp.GetComponent<MonoParticle>(); //get component
-                mp.particle = new Particle(new Vector3(x, y, 0), new Vector3(0, 0, 0), 1); //create new particle
+                mp.particle = new Particle(new Vector3(x, y, 0), new Vector3(0, 0, 0), mass); //create new particle
                 monoparticles.Add(mp.GetComponent<MonoParticle>()); //add particle
                 x += 1f + spacing; //add small gap
             }
@@ -239,10 +235,11 @@ public class Controls : MonoBehaviour
             y += 1f + spacing; //add small gap
         }
         //anchor points
-        monoparticles[monoparticles.Count - 1].anchorPoint = true;
         monoparticles[monoparticles.Count - w].anchorPoint = true;
-        monoparticles[0].anchorPoint = true;
-        monoparticles[width - 1].anchorPoint = true;
+        monoparticles[monoparticles.Count - 1].anchorPoint = true;
+        monoparticles[monoparticles.Count - 2].anchorPoint = true;
+        monoparticles[monoparticles.Count - 3].anchorPoint = true;
+        monoparticles[monoparticles.Count - 4].anchorPoint = true;
     }
 
     public void SetSpringDampers()
