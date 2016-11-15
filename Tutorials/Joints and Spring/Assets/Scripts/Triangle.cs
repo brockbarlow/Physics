@@ -10,18 +10,11 @@ public class Triangle
                  //TP1_P2, TP2_P3, TP3_P1
     public Triangle() { } //default constructor;
 
-    public Triangle(MonoParticle mpOne, MonoParticle mpTwo, MonoParticle mpThree) //custom constructor one
+    public Triangle(MonoParticle mpOne, MonoParticle mpTwo, MonoParticle mpThree) //custom constructor
     {
         TP1 = mpOne.particle; //first triangle object equals monoparticle object mpone
         TP2 = mpTwo.particle; //second triangle object equals monoparticle object mptwo
         TP3 = mpThree.particle; //thrid triangel object equals monoparticle object three
-    }
-
-    public Triangle(Particle mpOne, Particle mpTwo, Particle mpThree) //custom constructor two
-    {
-        TP1 = mpOne; //first triangle object equals particle object mpone
-        TP2 = mpTwo; //second triangle object equals particle object mptwo
-        TP3 = mpThree; //thrid triangle object equals particle object mp three
     }
 
     public bool ComputeAerodynamicForce(Vector3 air) //takes in air value
