@@ -705,28 +705,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8fc477c43b581942a006bf829e6064c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monoparticles: []
-  drawers: []
-  prefab: {fileID: 1000013379872972, guid: c0a17ca9ec81aae4284bc11ac18918f0, type: 2}
-  prefabDamper: {fileID: 1000010126542630, guid: 1874bb9664fb87d4c9daf105e070b8ec,
+  Monoparticles: []
+  Drawers: []
+  Prefab: {fileID: 1000013379872972, guid: c0a17ca9ec81aae4284bc11ac18918f0, type: 2}
+  PrefabDamper: {fileID: 1000010126542630, guid: 1874bb9664fb87d4c9daf105e070b8ec,
     type: 2}
-  prefabCamera: {fileID: 1830036204}
-  width: 5
-  height: 5
-  spacing: 2
-  mass: 3
-  gravity: 25
-  springConstant: 100
-  dampingFactor: 10
-  restLength: 3
-  windStrength: 0
-  wind: 0
-  tearFactor: 10
-  springConstantSlider: {fileID: 1740813103}
-  dampingFactorSlider: {fileID: 855397017}
-  windStrengthSlider: {fileID: 347352573}
-  windToggle: {fileID: 484412410}
-  tearFactorSlider: {fileID: 1302642540}
+  PrefabCamera: {fileID: 1830036204}
+  Width: 5
+  Height: 5
+  Spacing: 2
+  Mass: 5
+  Gravity: 5
+  SpringConstant: 100
+  DampingFactor: 10
+  RestLength: 3
+  WindStrength: 15
+  Wind: 0
+  TearFactor: 10
+  SpringConstantSlider: {fileID: 1740813103}
+  DampingFactorSlider: {fileID: 855397017}
+  WindStrengthSlider: {fileID: 347352573}
+  WindToggle: {fileID: 484412410}
+  TearFactorSlider: {fileID: 1302642540}
 --- !u!4 &504251814
 Transform:
   m_ObjectHideFlags: 0
@@ -1423,7 +1423,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1065945474}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56e91c65e2bc0af49b2feeec991d0096, type: 3}
+  m_Script: {fileID: 11500000, guid: d46b9d69941ac9945ac17b2a5ab78137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1065945476
@@ -2686,7 +2686,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1065945475}
-        m_MethodName: restart
+        m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

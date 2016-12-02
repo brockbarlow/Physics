@@ -1,367 +1,370 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.UI;
+﻿namespace Assets.Scripts
+{
+    using UnityEngine;
+    using System.Collections.Generic;
+    using UnityEngine.UI;
 
-public class Controls : MonoBehaviour
-{   //lists for monoparticles, springDampers, triangles, and drawers
-    [HideInInspector]public List<MonoParticle> monoparticles;
-    public List<SpringDamper> springDampers;
-    public List<Triangle> triangles;
-    [HideInInspector]public List<GameObject> drawers;
-    
-    //game objects for particles, dampers and camera
-    public GameObject prefab;
-    public GameObject prefabDamper;
-    public GameObject prefabCamera;
+    public class Controls : MonoBehaviour
+    {   //lists for monoparticles, springDampers, triangles, and drawers
+        [HideInInspector]public List<MonoParticle> Monoparticles;
+        public List<SpringDamper> SpringDampers;
+        public List<Triangle> Triangles;
+        [HideInInspector]public List<GameObject> Drawers;
 
-    public int width; //determines how wide the grid is
-    public int height; //determines how tall the grid is
-    public float spacing; //adds a space between the points
-    public float mass; 
+        //game objects for particles, dampers and camera
+        public GameObject Prefab;
+        public GameObject PrefabDamper;
+        public GameObject PrefabCamera;
 
-    public float gravity; 
-    [Range(0f, 100f)]public float springConstant; //ks 
-    [Range(0f, 10f)]public float dampingFactor; //kd 
-    public float restLength; //lo //DO NOT LET USER MODIFY THIS VALUE;
-    [Range(0f, 15f)]public float windStrength; //how strong the wind is
-    public bool wind; //turns wind on/off
-    [Range(0.01f, 10f)]public float tearFactor; //how strong the lines/bounds are
+        public int Width; //determines how wide the grid is
+        public int Height; //determines how tall the grid is
+        public float Spacing; //adds a space between the points
+        public float Mass;
 
-    //ui sliders and toggle objects
-    public Slider springConstantSlider;
-    public Slider dampingFactorSlider;
-    public Slider windStrengthSlider;
-    public Toggle windToggle;
-    public Slider tearFactorSlider;
+        public float Gravity;
+        [Range(0f, 100f)]public float SpringConstant; //ks 
+        [Range(0f, 10f)]public float DampingFactor; //kd 
+        public float RestLength; //lo //DO NOT LET USER MODIFY THIS VALUE;
+        [Range(0f, 15f)]public float WindStrength; //how strong the wind is
+        public bool Wind; //turns wind on/off
+        [Range(0.01f, 10f)]public float TearFactor; //how strong the lines/bounds are
 
-    public void Awake()
-    {   //create new lists
-        monoparticles = new List<MonoParticle>();
-        springDampers = new List<SpringDamper>();
-        triangles = new List<Triangle>();
-        drawers = new List<GameObject>();
+        //ui sliders and toggle objects
+        public Slider SpringConstantSlider;
+        public Slider DampingFactorSlider;
+        public Slider WindStrengthSlider;
+        public Toggle WindToggle;
+        public Slider TearFactorSlider;
 
-        //create the grid
-        SpawnParticles(width, height);
+        public void Awake()
+        {   //create new lists
+            Monoparticles = new List<MonoParticle>();
+            SpringDampers = new List<SpringDamper>();
+            Triangles = new List<Triangle>();
+            Drawers = new List<GameObject>();
 
-        //set dampers and triangles
-        SetSpringDampers();
-        SetTriangles();
+            //create the grid
+            SpawnParticles(Width, Height);
 
-        //lock the camera in place
-        Vector3 total = Vector3.zero;
-        foreach (MonoParticle mp in monoparticles)
-        {
-            total += mp.particle.position;
-        }
-        total = total / monoparticles.Count;
-        total.x = 3.67f;
-        total.y = 0f;
-        total.z = -47.48f;
-        prefabCamera.transform.position = total;
-    }
+            //set dampers and triangles
+            SetSpringDampers();
+            SetTriangles();
 
-    public void Start()
-    {   //set the slider values
-        springConstantSlider.value = 100f;
-        dampingFactorSlider.value = 10f;
-        windStrengthSlider.value = 0f;
-        tearFactorSlider.value = 10f;
-
-        //these variables will equal the slider values
-        springConstant = springConstantSlider.value;
-        dampingFactor = dampingFactorSlider.value;
-        windStrength = windStrengthSlider.value;
-        tearFactor = tearFactorSlider.value;
-    }
-
-    public void Update()
-    {   //update these variables with the slider values
-        springConstant = springConstantSlider.value;
-        dampingFactor = dampingFactorSlider.value;
-        windStrength = windStrengthSlider.value;
-        tearFactor = tearFactorSlider.value;
-    }
-
-    public void FixedUpdate()
-    {   //create new 'temp' lists
-        List<SpringDamper> tempSpringDampers = new List<SpringDamper>();
-        List<Triangle> tempTriangles = new List<Triangle>();
-
-        //add sd to 'temp' spring dampers list
-        foreach (SpringDamper sd in springDampers)
-        {
-            tempSpringDampers.Add(sd);
-        }
-
-        //add t to 'temp' triangles list
-        foreach (Triangle t in triangles)
-        {
-            tempTriangles.Add(t);
-        }
-
-        foreach (MonoParticle mp in monoparticles)
-        { //for each particle: apply gravity
-            mp.particle.force = Vector3.zero;
-            mp.particle.force = (gravity * Vector3.down) * mp.particle.mass;
-        }
-
-        foreach (SpringDamper sd in tempSpringDampers)
-        { //for each spring-damper: compute & apply forces
-            sd.springConstant = springConstant;
-            sd.dampingFactor = dampingFactor;
-            sd.restLength = restLength;
-            sd.ComputeForce();
-            //used for tearing
-            if (sd.threadTearing(tearFactor) || (sd.P1 == null || sd.P2 == null))
+            //lock the camera in place
+            var total = Vector3.zero;
+            foreach (var mp in Monoparticles)
             {
-                Destroy(drawers[springDampers.IndexOf(sd)]);
-                drawers.Remove(drawers[springDampers.IndexOf(sd)]);
-                springDampers.Remove(sd);
+                total += mp.Particle.Position;
             }
+            total = total / Monoparticles.Count;
+            total.x = 3.67f;
+            total.y = 0f;
+            total.z = -47.48f;
+            PrefabCamera.transform.position = total;
         }
 
-        foreach (Triangle t in tempTriangles)
-        {
-            if (windToggle.isOn) //if toggle box is checked...
+        public void Start()
+        {   //set the slider values
+            SpringConstantSlider.value = 100f;
+            DampingFactorSlider.value = 10f;
+            WindStrengthSlider.value = 0f;
+            TearFactorSlider.value = 10f;
+
+            //these variables will equal the slider values
+            SpringConstant = SpringConstantSlider.value;
+            DampingFactor = DampingFactorSlider.value;
+            WindStrength = WindStrengthSlider.value;
+            TearFactor = TearFactorSlider.value;
+        }
+
+        public void Update()
+        {   //update these variables with the slider values
+            SpringConstant = SpringConstantSlider.value;
+            DampingFactor = DampingFactorSlider.value;
+            WindStrength = WindStrengthSlider.value;
+            TearFactor = TearFactorSlider.value;
+        }
+
+        public void FixedUpdate()
+        {   //create new 'temp' lists
+            var tempSpringDampers = new List<SpringDamper>();
+            var tempTriangles = new List<Triangle>();
+
+            //add sd to 'temp' spring dampers list
+            foreach (var sd in SpringDampers)
             {
-                wind = true;
-                if (wind == true) //if wind is on...
+                tempSpringDampers.Add(sd);
+            }
+
+            //add t to 'temp' triangles list
+            foreach (var t in Triangles)
+            {
+                tempTriangles.Add(t);
+            }
+
+            foreach (var mp in Monoparticles)
+            { //for each particle: apply gravity
+                mp.Particle.Force = Vector3.zero;
+                mp.Particle.Force = (Gravity * Vector3.down) * mp.Particle.Mass;
+            }
+
+            foreach (var sd in tempSpringDampers)
+            { //for each spring-damper: compute & apply forces
+                sd.SpringConstant = SpringConstant;
+                sd.DampingFactor = DampingFactor;
+                sd.RestLength = RestLength;
+                sd.ComputeForce();
+                //used for tearing
+                if (sd.ThreadTearing(TearFactor) || (sd.P1 == null || sd.P2 == null))
                 {
-                    if (!springDampers.Contains(t.SD1) || !springDampers.Contains(t.SD2) || !springDampers.Contains(t.SD3))
-                    {   
-                        triangles.Remove(t);
-                    }
-                    else
-                    {   //compute aero force
-                        t.ComputeAerodynamicForce(Vector3.forward * windStrength);
-                    }
+                    Destroy(Drawers[SpringDampers.IndexOf(sd)]);
+                    Drawers.Remove(Drawers[SpringDampers.IndexOf(sd)]);
+                    SpringDampers.Remove(sd);
                 }
             }
-        }
 
-        foreach (MonoParticle mp in monoparticles)
-        {  //floor boundary
-            if (Camera.main.WorldToScreenPoint(mp.particle.position).y <= 10f)  
+            foreach (var t in tempTriangles)
             {
-                if (mp.particle.force.y < 0f)
+                if (WindToggle.isOn) //if toggle box is checked...
                 {
-                    mp.particle.force.y = 0;
-                }
-                mp.particle.velocity = -mp.particle.velocity * .65f;
-            }
-
-            //ceiling boundary
-            if (Camera.main.WorldToScreenPoint(mp.particle.position).y > Screen.height - 10f)  
-            {
-                if (mp.particle.force.y > 0f)
-                {
-                    mp.particle.force.y = 0;
-                }  
-                mp.particle.velocity = -mp.particle.velocity * .65f;
-            }
-
-            //left wall
-            if (Camera.main.WorldToScreenPoint(mp.particle.position).x < 10f)    
-            {
-                if (mp.particle.force.x < 0f)
-                {
-                    mp.particle.force.x = 0;
-                }
-                mp.particle.velocity = -mp.particle.velocity;
-            }
-
-            //right wall
-            if (Camera.main.WorldToScreenPoint(mp.particle.position).x > Screen.width - 10f)    
-            {
-                if (mp.particle.force.x > 0f)
-                {
-                    mp.particle.force.x = 0;
-                } 
-                mp.particle.velocity = -mp.particle.velocity * .65f;
-            }
-
-            //update particle if not an anchor. 
-            if (mp.anchorPoint == false)
-            {
-                mp.transform.position = mp.particle.UpdateParticle();
-            }
-            else
-            {
-                mp.particle.position = mp.transform.position;
-            }
-        }
-    }
-
-    public void LateUpdate()
-    {   //create new 'temp' list
-        List<GameObject> tempSpringDampers = new List<GameObject>();
-
-        //add go to 'temp' list
-        foreach (GameObject go in drawers)
-        {
-            tempSpringDampers.Add(go);
-        }
-
-        //setup line renderers
-        for (int i = 0; i < tempSpringDampers.Count; i++)
-        {
-            if (tempSpringDampers[i] != null)
-            {
-                LineRenderer lr = tempSpringDampers[i].GetComponent<LineRenderer>();
-                lr.SetPosition(0, springDampers[i].P1.position);
-                lr.SetPosition(1, springDampers[i].P2.position);
-            }
-        }
-    }
-
-    public void SpawnParticles(int w, int h) //takes in width and height values
-    {
-        float x = 0f;
-        float y = 0f;
-        int count = 0;
-
-        for (int i = 0; i < h; i++)
-        {
-            for (int j = 0; j < w; j++, count++)
-            {   
-                GameObject temp = Instantiate(prefab, new Vector3(x, y, 0), new Quaternion()) as GameObject; //instantiate game object
-                MonoParticle mp = temp.GetComponent<MonoParticle>(); //get component
-                mp.particle = new Particle(new Vector3(x, y, 0), new Vector3(0, 0, 0), mass); //create new particle
-                monoparticles.Add(mp.GetComponent<MonoParticle>()); //add particle
-                x += 1f + spacing; //add small gap
-            }
-            x = 0f;
-            y += 1f + spacing; //add small gap
-        }
-        //anchor points
-        monoparticles[monoparticles.Count - w].anchorPoint = true;
-        monoparticles[monoparticles.Count - 1].anchorPoint = true;
-        monoparticles[monoparticles.Count - 2].anchorPoint = true;
-        monoparticles[monoparticles.Count - 3].anchorPoint = true;
-        monoparticles[monoparticles.Count - 4].anchorPoint = true;
-    }
-
-    public void SetSpringDampers()
-    {
-        foreach (MonoParticle mp in monoparticles)
-        {
-            int index = FindIndex(monoparticles, mp);
-            mp.particle.particles = new List<Particle>();
-
-            if ((index + 1) % width > index % width)
-            { //creates a horizontal line
-                mp.particle.particles.Add(monoparticles[index + 1].particle);
-                SpringDamper sd = new SpringDamper(mp.particle, monoparticles[index + 1].particle, springConstant, dampingFactor, restLength);
-                drawers.Add(CreateDrawer(sd));
-                springDampers.Add(sd);
-            }
-
-            if (index + width < monoparticles.Count)
-            { //creates a vertical line
-                mp.particle.particles.Add(monoparticles[index + width].particle);
-                SpringDamper sd = new SpringDamper(mp.particle, monoparticles[index + width].particle, springConstant, dampingFactor, restLength);
-                drawers.Add(CreateDrawer(sd));
-                springDampers.Add(sd);
-            }
-
-            if (index + width - 1 < monoparticles.Count && index - 1 >= 0 && (index - 1) % width < index % width)
-            { //creates a diagonal line (top left)
-                mp.particle.particles.Add(monoparticles[index + width - 1].particle);
-                SpringDamper sd = new SpringDamper(mp.particle, monoparticles[index + width - 1].particle, springConstant, dampingFactor, restLength);
-                drawers.Add(CreateDrawer(sd));
-                springDampers.Add(sd);
-            }
-
-            if (index + width + 1 < monoparticles.Count && (index + 1) % width > index % width)
-            { //creates a diagonal line (top right)
-                mp.particle.particles.Add(monoparticles[index + width + 1].particle);
-                SpringDamper sd = new SpringDamper(mp.particle, monoparticles[index + width + 1].particle, springConstant, dampingFactor, restLength);
-                drawers.Add(CreateDrawer(sd));
-                springDampers.Add(sd);
-            }
-        }
-    }
-
-    public void SetTriangles()
-    { //first check of triangles
-        foreach (MonoParticle mp in monoparticles)
-        {
-            int index = FindIndex(monoparticles, mp);
-            Triangle t;
-
-            if (index % width != width - 1 && index + width < monoparticles.Count)
-            {
-                t = new Triangle(monoparticles[index], monoparticles[index + 1], monoparticles[index + width]);
-
-                foreach (SpringDamper sd in springDampers)
-                {
-                    if ((sd.P1 == t.TP1 && sd.P2 == t.TP2) || (sd.P1 == t.TP2 && sd.P2 == t.TP1))
+                    Wind = true;
+                    if (Wind) //if wind is on...
                     {
-                        t.SD1 = sd;
-                    }
-                    else if ((sd.P1 == t.TP2 && sd.P2 == t.TP3) || (sd.P1 == t.TP3 && sd.P2 == t.TP2))
-                    {
-                        t.SD2 = sd;
-                    }
-                    else if ((sd.P1 == t.TP3 && sd.P2 == t.TP1) || (sd.P1 == t.TP1 && sd.P2 == t.TP3))
-                    {
-                        t.SD3 = sd;
+                        if (!SpringDampers.Contains(t.Sd1) || !SpringDampers.Contains(t.Sd2) || !SpringDampers.Contains(t.Sd3))
+                        {
+                            Triangles.Remove(t);
+                        }
+                        else
+                        {   //compute aero force
+                            t.ComputeAerodynamicForce(Vector3.forward * WindStrength);
+                        }
                     }
                 }
-                triangles.Add(t);
+            }
+
+            foreach (var mp in Monoparticles)
+            {  //floor boundary
+                if (Camera.main.WorldToScreenPoint(mp.Particle.Position).y <= 10f)
+                {
+                    if (mp.Particle.Force.y < 0f)
+                    {
+                        mp.Particle.Force.y = 0;
+                    }
+                    mp.Particle.Velocity = -mp.Particle.Velocity * .65f;
+                }
+
+                //ceiling boundary
+                if (Camera.main.WorldToScreenPoint(mp.Particle.Position).y > Screen.height - 10f)
+                {
+                    if (mp.Particle.Force.y > 0f)
+                    {
+                        mp.Particle.Force.y = 0;
+                    }
+                    mp.Particle.Velocity = -mp.Particle.Velocity * .65f;
+                }
+
+                //left wall
+                if (Camera.main.WorldToScreenPoint(mp.Particle.Position).x < 10f)
+                {
+                    if (mp.Particle.Force.x < 0f)
+                    {
+                        mp.Particle.Force.x = 0;
+                    }
+                    mp.Particle.Velocity = -mp.Particle.Velocity;
+                }
+
+                //right wall
+                if (Camera.main.WorldToScreenPoint(mp.Particle.Position).x > Screen.width - 10f)
+                {
+                    if (mp.Particle.Force.x > 0f)
+                    {
+                        mp.Particle.Force.x = 0;
+                    }
+                    mp.Particle.Velocity = -mp.Particle.Velocity * .65f;
+                }
+
+                //update particle if not an anchor. 
+                if (mp.AnchorPoint == false)
+                {
+                    mp.transform.position = mp.Particle.UpdateParticle();
+                }
+                else
+                {
+                    mp.Particle.Position = mp.transform.position;
+                }
             }
         }
-        //second check of triangles
-        foreach (MonoParticle mp in monoparticles)
-        {
-            int index = FindIndex(monoparticles, mp);
-            Triangle t;
 
-            if (index >= width && index + 1 < monoparticles.Count && index % width != width - 1)
+        public void LateUpdate()
+        {   //create new 'temp' list
+            var tempSpringDampers = new List<GameObject>();
+
+            //add go to 'temp' list
+            foreach (var go in Drawers)
             {
-                t = new Triangle(monoparticles[index], monoparticles[index + 1], monoparticles[index - width + 1]);
-                triangles.Add(t);
+                tempSpringDampers.Add(go);
             }
-        }
-    }
-    //find particle index
-    public int FindIndex(List<MonoParticle> list, MonoParticle mp)
-    {
-        int index = 0;
 
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (list[i] == mp)
+            //setup line renderers
+            for (var i = 0; i < tempSpringDampers.Count; i++)
             {
-                index = i;
-                break;
+                if (tempSpringDampers[i] != null)
+                {
+                    var lr = tempSpringDampers[i].GetComponent<LineRenderer>();
+                    lr.SetPosition(0, SpringDampers[i].P1.Position);
+                    lr.SetPosition(1, SpringDampers[i].P2.Position);
+                }
             }
         }
-        return index;
-    }
-    //find triangle index
-    public int FindIndex(List<Triangle> list, Triangle t)
-    {
-        int index = 0;
 
-        for (int i = 0; i < list.Count; i++)
+        public void SpawnParticles(int w, int h) //takes in width and height values
         {
-            if (list[i] == t)
+            var x = 0f;
+            var y = 0f;
+            var count = 0;
+
+            for (var i = 0; i < h; i++)
             {
-                index = i;
-                break;
+                for (var j = 0; j < w; j++, count++)
+                {
+                    var temp = Instantiate(Prefab, new Vector3(x, y, 0), new Quaternion()) as GameObject; //instantiate game object
+                    var mp = temp.GetComponent<MonoParticle>(); //get component
+                    mp.Particle = new Particle(new Vector3(x, y, 0), new Vector3(0, 0, 0), Mass); //create new particle
+                    Monoparticles.Add(mp.GetComponent<MonoParticle>()); //add particle
+                    x += 1f + Spacing; //add small gap
+                }
+                x = 0f;
+                y += 1f + Spacing; //add small gap
+            }
+            //anchor points
+            Monoparticles[Monoparticles.Count - w].AnchorPoint = true;
+            Monoparticles[Monoparticles.Count - 1].AnchorPoint = true;
+            Monoparticles[Monoparticles.Count - 2].AnchorPoint = true;
+            Monoparticles[Monoparticles.Count - 3].AnchorPoint = true;
+            Monoparticles[Monoparticles.Count - 4].AnchorPoint = true;
+        }
+
+        public void SetSpringDampers()
+        {
+            foreach (var mp in Monoparticles)
+            {
+                var index = FindIndex(Monoparticles, mp);
+                mp.Particle.Particles = new List<Particle>();
+
+                if ((index + 1) % Width > index % Width)
+                { //creates a horizontal line
+                    mp.Particle.Particles.Add(Monoparticles[index + 1].Particle);
+                    var sd = new SpringDamper(mp.Particle, Monoparticles[index + 1].Particle, SpringConstant, DampingFactor, RestLength);
+                    Drawers.Add(CreateDrawer(sd));
+                    SpringDampers.Add(sd);
+                }
+
+                if (index + Width < Monoparticles.Count)
+                { //creates a vertical line
+                    mp.Particle.Particles.Add(Monoparticles[index + Width].Particle);
+                    var sd = new SpringDamper(mp.Particle, Monoparticles[index + Width].Particle, SpringConstant, DampingFactor, RestLength);
+                    Drawers.Add(CreateDrawer(sd));
+                    SpringDampers.Add(sd);
+                }
+
+                if (index + Width - 1 < Monoparticles.Count && index - 1 >= 0 && (index - 1) % Width < index % Width)
+                { //creates a diagonal line (top left)
+                    mp.Particle.Particles.Add(Monoparticles[index + Width - 1].Particle);
+                    var sd = new SpringDamper(mp.Particle, Monoparticles[index + Width - 1].Particle, SpringConstant, DampingFactor, RestLength);
+                    Drawers.Add(CreateDrawer(sd));
+                    SpringDampers.Add(sd);
+                }
+
+                if (index + Width + 1 < Monoparticles.Count && (index + 1) % Width > index % Width)
+                { //creates a diagonal line (top right)
+                    mp.Particle.Particles.Add(Monoparticles[index + Width + 1].Particle);
+                    var sd = new SpringDamper(mp.Particle, Monoparticles[index + Width + 1].Particle, SpringConstant, DampingFactor, RestLength);
+                    Drawers.Add(CreateDrawer(sd));
+                    SpringDampers.Add(sd);
+                }
             }
         }
-        return index;
-    }
 
-    public GameObject CreateDrawer(SpringDamper sd)//takes in sd value
-    { //used for line renderers
-        GameObject drawerGO = Instantiate(prefabDamper, (sd.P1.position + sd.P2.position) / 2f, new Quaternion()) as GameObject; //instantiate game object
-        LineRenderer lr = drawerGO.GetComponent<LineRenderer>();
-        lr.materials[0].color = Color.black; //the color of the line renderers. //will be black
-        lr.SetWidth(.1f, .1f);
-        return drawerGO;
+        public void SetTriangles()
+        { //first check of triangles
+            foreach (var mp in Monoparticles)
+            {
+                var index = FindIndex(Monoparticles, mp);
+                Triangle t;
+
+                if (index % Width != Width - 1 && index + Width < Monoparticles.Count)
+                {
+                    t = new Triangle(Monoparticles[index], Monoparticles[index + 1], Monoparticles[index + Width]);
+
+                    foreach (var sd in SpringDampers)
+                    {
+                        if ((sd.P1 == t.Tp1 && sd.P2 == t.Tp2) || (sd.P1 == t.Tp2 && sd.P2 == t.Tp1))
+                        {
+                            t.Sd1 = sd;
+                        }
+                        else if ((sd.P1 == t.Tp2 && sd.P2 == t.Tp3) || (sd.P1 == t.Tp3 && sd.P2 == t.Tp2))
+                        {
+                            t.Sd2 = sd;
+                        }
+                        else if ((sd.P1 == t.Tp3 && sd.P2 == t.Tp1) || (sd.P1 == t.Tp1 && sd.P2 == t.Tp3))
+                        {
+                            t.Sd3 = sd;
+                        }
+                    }
+                    Triangles.Add(t);
+                }
+            }
+            //second check of triangles
+            foreach (var mp in Monoparticles)
+            {
+                var index = FindIndex(Monoparticles, mp);
+                Triangle t;
+
+                if (index >= Width && index + 1 < Monoparticles.Count && index % Width != Width - 1)
+                {
+                    t = new Triangle(Monoparticles[index], Monoparticles[index + 1], Monoparticles[index - Width + 1]);
+                    Triangles.Add(t);
+                }
+            }
+        }
+        //find particle index
+        public int FindIndex(List<MonoParticle> list, MonoParticle mp)
+        {
+            var index = 0;
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                if (list[i] == mp)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+        //find triangle index
+        public int FindIndex(List<Triangle> list, Triangle t)
+        {
+            var index = 0;
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                if (list[i] == t)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+
+        public GameObject CreateDrawer(SpringDamper sd)//takes in sd value
+        { //used for line renderers
+            var drawerGo = Instantiate(PrefabDamper, (sd.P1.Position + sd.P2.Position) / 2f, new Quaternion()) as GameObject; //instantiate game object
+            var lr = drawerGo.GetComponent<LineRenderer>();
+            lr.materials[0].color = Color.black; //the color of the line renderers. //will be black
+            lr.SetWidth(.1f, .1f);
+            return drawerGo;
+        }
     }
 }
