@@ -1,12 +1,15 @@
-﻿using UnityEngine;
-
-public class BoidBehavior : MonoBehaviour
+﻿namespace Assets.Scripts
 {
-    [HideInInspector]public Vector3 velocity;
-    [HideInInspector]public float mass;
+    using UnityEngine;
 
-    public void LateUpdate()
+    public class BoidBehavior : MonoBehaviour
     {
-        transform.position += velocity;
+        [HideInInspector]public Vector3 Velocity;
+        [HideInInspector]public float Mass;
+
+        public void LateUpdate()
+        {
+            transform.position += Velocity;
+        }
     }
 }

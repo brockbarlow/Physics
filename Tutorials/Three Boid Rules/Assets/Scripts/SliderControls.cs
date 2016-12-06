@@ -1,34 +1,42 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.UI;
-
-public class SliderControls : MonoBehaviour
+﻿namespace Assets.Scripts
 {
-    public List<BoidRules> boidRules;
-    public Slider cohesion;
-    public Slider dispension;
-    public Slider alignment;
-    public Slider tendency;
+    using UnityEngine;
+    using System.Collections.Generic;
+    using UnityEngine.UI;
 
-    public void Start()
+    public class SliderControls : MonoBehaviour
     {
-        foreach (BoidRules br in boidRules)
+        public List<BoidRules> BoidRules;
+        public Slider CohesionSlider;
+        public Slider DispensionSlider;
+        public Slider AlignmentSlider;
+        public Slider TendencySlider;
+
+        public void Start()
         {
-            br.cohesion = cohesion.value;
-            br.dispersion = dispension.value;
-            br.alignment = alignment.value;
-            br.tendency = 0f;
+            CohesionSlider.value = 0f;
+            DispensionSlider.value = 0f;
+            AlignmentSlider.value = 0f;
+            TendencySlider.value = 0f;
+
+            foreach (var br in BoidRules)
+            {
+                br.Cohesion = CohesionSlider.value;
+                br.Dispersion = DispensionSlider.value;
+                br.Alignment = AlignmentSlider.value;
+                br.Tendency = TendencySlider.value;
+            }
         }
-    }
 
-    public void Update()
-    {
-        foreach (BoidRules br in boidRules)
+        public void Update()
         {
-            br.cohesion = cohesion.value;
-            br.dispersion = dispension.value;
-            br.alignment = alignment.value;
-            br.tendency = tendency.value;
+            foreach (var br in BoidRules)
+            {
+                br.Cohesion = CohesionSlider.value;
+                br.Dispersion = DispensionSlider.value;
+                br.Alignment = AlignmentSlider.value;
+                br.Tendency = TendencySlider.value;
+            }
         }
     }
 }

@@ -389,20 +389,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f5b8d170a7fecd4c8af6a34633152ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 1000012535253810, guid: 32f61bfe933ca46488b08d66af8460eb, type: 2}
-  target: {fileID: 1959286438}
-  center: {fileID: 410765539}
-  targetRange: 50
-  boundries: 50
-  maxSpeed: 1
-  minMass: 10
-  maxMass: 10
-  boidNumber: 20
-  maxBoidDistance: 30
-  cohesion: 0
-  dispersion: 0
-  alignment: 0
-  tendency: 0
+  Prefab: {fileID: 1000012535253810, guid: 32f61bfe933ca46488b08d66af8460eb, type: 2}
+  Target: {fileID: 1959286438}
+  Center: {fileID: 410765539}
+  TargetRange: 50
+  Boundries: 50
+  MaxSpeed: 1
+  MinMass: 10
+  MaxMass: 10
+  BoidNumber: 20
+  MaxBoidDistance: 30
+  Cohesion: 0
+  Dispersion: 0
+  Alignment: 0
+  Tendency: 0
 --- !u!4 &350308488
 Transform:
   m_ObjectHideFlags: 0
@@ -416,7 +416,7 @@ Transform:
   m_Children:
   - {fileID: 410765539}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
 --- !u!1 &360516469
 GameObject:
   m_ObjectHideFlags: 0
@@ -983,13 +983,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 926594161}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -453, y: -212, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_Father: {fileID: 1008453642}
+  m_RootOrder: 5
 --- !u!1 &931488552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1217,6 +1217,7 @@ RectTransform:
   - {fileID: 581243325}
   - {fileID: 1320195668}
   - {fileID: 1881392055}
+  - {fileID: 926594164}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
@@ -1235,12 +1236,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d371017132939b4691b0e055ade55b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boidRules:
-  - {fileID: 350308487}
-  cohesion: {fileID: 2129660104}
-  dispension: {fileID: 1229571863}
-  alignment: {fileID: 581243326}
-  tendency: {fileID: 1320195669}
+  BoidRules: []
+  CohesionSlider: {fileID: 2129660104}
+  DispensionSlider: {fileID: 1229571863}
+  AlignmentSlider: {fileID: 581243326}
+  TendencySlider: {fileID: 1320195669}
 --- !u!1 &1091013546
 GameObject:
   m_ObjectHideFlags: 0
@@ -2346,7 +2346,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
 --- !u!114 &1959286439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2355,11 +2355,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1959286434}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d84ed7f97ab81a459e53845eaaa60d4, type: 3}
+  m_Script: {fileID: 11500000, guid: a6971b7a205500a48934bdbe89766f51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement: {x: 0, y: 0, z: 0}
-  range: 54
+  Movement: {x: 0, y: 0, z: 0}
+  Range: 54
 --- !u!1 &2129660102
 GameObject:
   m_ObjectHideFlags: 0
