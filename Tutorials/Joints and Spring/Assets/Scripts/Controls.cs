@@ -1,5 +1,5 @@
 ﻿namespace Assets.Scripts
-{
+{   //required usings
     using UnityEngine;
     using System.Collections.Generic;
     using UnityEngine.UI;

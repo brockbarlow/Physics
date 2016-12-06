@@ -1,5 +1,5 @@
 ﻿namespace Assets.Scripts
-{
+{   //required usings
     using UnityEngine;
 
     public class MonoParticle : MonoBehaviour

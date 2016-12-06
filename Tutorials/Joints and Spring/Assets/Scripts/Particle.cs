@@ -1,5 +1,5 @@
 ﻿namespace Assets.Scripts
-{
+{   //required usings
     using UnityEngine;
     using System.Collections.Generic;
 
@@ -37,8 +37,8 @@
             Velocity += Acceleration * Time.fixedDeltaTime; //adds this result to velocity
             Velocity = Vector3.ClampMagnitude(Velocity, Velocity.magnitude); //clamp the velocity (sets it).
             Position += Velocity * Time.fixedDeltaTime; //adds this result to position
-                                                        //fixedDeltaTime is affected by the settings of the physics simulation. it runs at a (more or less) fixed interval and is not affected
-                                                        //by inefficiencies in code.
+                                                        //fixedDeltaTime is affected by the settings of the physics simulation. it runs at a (more or less)
+                                                        //fixed interval and is not affected by inefficiencies in code.
             return Position; //return the new position
         }
     }

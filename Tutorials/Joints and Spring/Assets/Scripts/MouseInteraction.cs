@@ -1,10 +1,10 @@
 ﻿namespace Assets.Scripts
-{
+{   //required usings
     using UnityEngine;
 
     public class MouseInteraction : MonoBehaviour
     {
-        private GameObject _current = null; //current is set to null be default
+        private GameObject _current; //current is set to null be default
 
         public void Update()
         {
@@ -49,7 +49,6 @@
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition); //returns a ray going from camera through a screen point
             var hit = new RaycastHit(); //structure used to get information back from a raycast
             Physics.Raycast(ray.origin, ray.direction, out hit); //global physics properties and helper methods
-            //return hit.transform.gameObject;
             if (hit.transform != null) //if hit.transform does not equal null
             {
                 return hit.transform.gameObject;

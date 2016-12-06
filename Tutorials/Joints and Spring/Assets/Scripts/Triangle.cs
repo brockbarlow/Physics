@@ -1,5 +1,5 @@
 ﻿namespace Assets.Scripts
-{
+{   //required usings
     using UnityEngine;
 
     public class Triangle
@@ -10,7 +10,6 @@
         public Particle Tp1, Tp2, Tp3; //particle triangle objects
         public SpringDamper Sd1, Sd2, Sd3; //springdamper triangle objects
                                            //TP1_P2, TP2_P3, TP3_P1
-        public Triangle() { } //default constructor;
 
         public Triangle(MonoParticle mpOne, MonoParticle mpTwo, MonoParticle mpThree) //custom constructor
         {
@@ -29,7 +28,6 @@
             AreaOfTriangle = ao * (Vector3.Dot(AverageVelocity, SurfaceNormal) / AverageVelocity.magnitude); //a = ao * v dot n / |v|
             var aeroForce = -(1f / 2f) * 1f * Mathf.Pow(AverageVelocity.magnitude, 2) * 1f * AreaOfTriangle * SurfaceNormal;
             //faero = -(1/2) * p * |v|2 * cd * a * e //p = density of the air //cd = coefficient of drag for the object //a = cross sectional area of the object //e = unit vectro in the opposite direction of the velocity
-
             //for my vector3 aeroForce, instead of opposing the velocity the force pushes against the normal of the surface
             //faero = -(1/2) * p * |v|2 * cd * a * n
 
