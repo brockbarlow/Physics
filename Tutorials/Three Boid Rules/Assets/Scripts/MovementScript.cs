@@ -4,8 +4,7 @@
 
     public class MovementScript : MonoBehaviour
     {
-        [HideInInspector]
-        public Vector3 Movement;
+        [HideInInspector]public Vector3 Movement;
         public float Range;
 
         private void Update()

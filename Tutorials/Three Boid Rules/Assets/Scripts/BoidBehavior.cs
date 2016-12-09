@@ -5,11 +5,12 @@
     public class BoidBehavior : MonoBehaviour
     {
         [HideInInspector]public Vector3 Velocity;
-        [HideInInspector]public float Mass;
+        public float Mass;
 
         public void LateUpdate()
         {
             transform.position += Velocity;
+            transform.forward = Velocity.normalized;
         }
     }
 }

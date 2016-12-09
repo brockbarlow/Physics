@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000013795921000}
   - 33: {fileID: 33000011321633978}
-  - 135: {fileID: 135000012595225720}
   - 23: {fileID: 23000010355779784}
   - 114: {fileID: 114000011460396178}
   m_Layer: 0
@@ -90,17 +89,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e374be11e56b48b41b6ee8a084f3232d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: {x: 0, y: 0, z: 0}
-  mass: 0
---- !u!135 &135000012595225720
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012535253810}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  Velocity: {x: 0, y: 0, z: 0}
+  Mass: 0
