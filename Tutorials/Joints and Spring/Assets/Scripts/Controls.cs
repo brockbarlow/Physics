@@ -3,6 +3,7 @@
     using UnityEngine;
     using System.Collections.Generic;
     using UnityEngine.UI;
+    using System.Linq;
 
     public class Controls : MonoBehaviour
     {   //lists for monoparticles, springDampers, triangles, and drawers
@@ -51,11 +52,7 @@
             SetTriangles();
 
             //lock the camera in place
-            var total = Vector3.zero;
-            foreach (var mp in Monoparticles)
-            {
-                total += mp.Particle.Position;
-            }
+            var total = Monoparticles.Aggregate(Vector3.zero, (current, mp) => current + mp.Particle.Position);
             total = total / Monoparticles.Count;
             total.x = 3.67f;
             total.y = 0f;
@@ -87,20 +84,12 @@
 
         public void FixedUpdate()
         {   //create new 'temp' lists
-            var tempSpringDampers = new List<SpringDamper>();
-            var tempTriangles = new List<Triangle>();
+            var tempSpringDampers = SpringDampers.ToList();
 
             //add sd to 'temp' spring dampers list
-            foreach (var sd in SpringDampers)
-            {
-                tempSpringDampers.Add(sd);
-            }
 
             //add t to 'temp' triangles list
-            foreach (var t in Triangles)
-            {
-                tempTriangles.Add(t);
-            }
+            var tempTriangles = Triangles.ToList();
 
             foreach (var mp in Monoparticles)
             { //for each particle: apply gravity
@@ -115,30 +104,24 @@
                 sd.RestLength = RestLength;
                 sd.ComputeForce();
                 //used for tearing
-                if (sd.ThreadTearing(TearFactor) || (sd.P1 == null || sd.P2 == null))
-                {
-                    Destroy(Drawers[SpringDampers.IndexOf(sd)]);
-                    Drawers.Remove(Drawers[SpringDampers.IndexOf(sd)]);
-                    SpringDampers.Remove(sd);
-                }
+                if (!sd.ThreadTearing(TearFactor) && (sd.P1 != null && sd.P2 != null)) continue;
+                Destroy(Drawers[SpringDampers.IndexOf(sd)]);
+                Drawers.Remove(Drawers[SpringDampers.IndexOf(sd)]);
+                SpringDampers.Remove(sd);
             }
 
             foreach (var t in tempTriangles)
             {
-                if (WindToggle.isOn) //if toggle box is checked...
+                if (!WindToggle.isOn) continue;
+                Wind = true;
+                if (!Wind) continue;
+                if (!SpringDampers.Contains(t.Sd1) || !SpringDampers.Contains(t.Sd2) || !SpringDampers.Contains(t.Sd3))
                 {
-                    Wind = true;
-                    if (Wind) //if wind is on...
-                    {
-                        if (!SpringDampers.Contains(t.Sd1) || !SpringDampers.Contains(t.Sd2) || !SpringDampers.Contains(t.Sd3))
-                        {
-                            Triangles.Remove(t);
-                        }
-                        else
-                        {   //compute aero force
-                            t.ComputeAerodynamicForce(Vector3.forward * WindStrength);
-                        }
-                    }
+                    Triangles.Remove(t);
+                }
+                else
+                {   //compute aero force
+                    t.ComputeAerodynamicForce(Vector3.forward * WindStrength);
                 }
             }
 
@@ -197,23 +180,17 @@
 
         public void LateUpdate()
         {   //create new 'temp' list
-            var tempSpringDampers = new List<GameObject>();
+            var tempSpringDampers = Drawers.ToList();
 
             //add go to 'temp' list
-            foreach (var go in Drawers)
-            {
-                tempSpringDampers.Add(go);
-            }
 
             //setup line renderers
             for (var i = 0; i < tempSpringDampers.Count; i++)
             {
-                if (tempSpringDampers[i] != null)
-                {
-                    var lr = tempSpringDampers[i].GetComponent<LineRenderer>();
-                    lr.SetPosition(0, SpringDampers[i].P1.Position);
-                    lr.SetPosition(1, SpringDampers[i].P2.Position);
-                }
+                if (tempSpringDampers[i] == null) continue;
+                var lr = tempSpringDampers[i].GetComponent<LineRenderer>();
+                lr.SetPosition(0, SpringDampers[i].P1.Position);
+                lr.SetPosition(1, SpringDampers[i].P2.Position);
             }
         }
 
@@ -221,16 +198,18 @@
         {
             var x = 0f;
             var y = 0f;
-            var count = 0;
 
             for (var i = 0; i < h; i++)
             {
-                for (var j = 0; j < w; j++, count++)
+                for (var j = 0; j < w; j++/*, count++*/)
                 {
                     var temp = Instantiate(Prefab, new Vector3(x, y, 0), new Quaternion()) as GameObject; //instantiate game object
-                    var mp = temp.GetComponent<MonoParticle>(); //get component
-                    mp.Particle = new Particle(new Vector3(x, y, 0), new Vector3(0, 0, 0), Mass); //create new particle
-                    Monoparticles.Add(mp.GetComponent<MonoParticle>()); //add particle
+                    if (temp != null)
+                    {
+                        var mp = temp.GetComponent<MonoParticle>(); //get component
+                        mp.Particle = new Particle(new Vector3(x, y, 0), new Vector3(0, 0, 0), Mass); //create new particle
+                        Monoparticles.Add(mp.GetComponent<MonoParticle>()); //add particle
+                    }
                     x += 1f + Spacing; //add small gap
                 }
                 x = 0f;
@@ -275,8 +254,9 @@
                     SpringDampers.Add(sd);
                 }
 
-                if (index + Width + 1 < Monoparticles.Count && (index + 1) % Width > index % Width)
-                { //creates a diagonal line (top right)
+                if (index + Width + 1 >= Monoparticles.Count || (index + 1)%Width <= index%Width) continue;
+                {
+//creates a diagonal line (top right)
                     mp.Particle.Particles.Add(Monoparticles[index + Width + 1].Particle);
                     var sd = new SpringDamper(mp.Particle, Monoparticles[index + Width + 1].Particle, SpringConstant, DampingFactor, RestLength);
                     Drawers.Add(CreateDrawer(sd));
@@ -290,41 +270,35 @@
             foreach (var mp in Monoparticles)
             {
                 var index = FindIndex(Monoparticles, mp);
-                Triangle t;
 
-                if (index % Width != Width - 1 && index + Width < Monoparticles.Count)
+                if (index%Width == Width - 1 || index + Width >= Monoparticles.Count) continue;
+                var t = new Triangle(Monoparticles[index], Monoparticles[index + 1], Monoparticles[index + Width]);
+
+                foreach (var sd in SpringDampers)
                 {
-                    t = new Triangle(Monoparticles[index], Monoparticles[index + 1], Monoparticles[index + Width]);
-
-                    foreach (var sd in SpringDampers)
+                    if ((sd.P1 == t.Tp1 && sd.P2 == t.Tp2) || (sd.P1 == t.Tp2 && sd.P2 == t.Tp1))
                     {
-                        if ((sd.P1 == t.Tp1 && sd.P2 == t.Tp2) || (sd.P1 == t.Tp2 && sd.P2 == t.Tp1))
-                        {
-                            t.Sd1 = sd;
-                        }
-                        else if ((sd.P1 == t.Tp2 && sd.P2 == t.Tp3) || (sd.P1 == t.Tp3 && sd.P2 == t.Tp2))
-                        {
-                            t.Sd2 = sd;
-                        }
-                        else if ((sd.P1 == t.Tp3 && sd.P2 == t.Tp1) || (sd.P1 == t.Tp1 && sd.P2 == t.Tp3))
-                        {
-                            t.Sd3 = sd;
-                        }
+                        t.Sd1 = sd;
                     }
-                    Triangles.Add(t);
+                    else if ((sd.P1 == t.Tp2 && sd.P2 == t.Tp3) || (sd.P1 == t.Tp3 && sd.P2 == t.Tp2))
+                    {
+                        t.Sd2 = sd;
+                    }
+                    else if ((sd.P1 == t.Tp3 && sd.P2 == t.Tp1) || (sd.P1 == t.Tp1 && sd.P2 == t.Tp3))
+                    {
+                        t.Sd3 = sd;
+                    }
                 }
+                Triangles.Add(t);
             }
             //second check of triangles
             foreach (var mp in Monoparticles)
             {
                 var index = FindIndex(Monoparticles, mp);
-                Triangle t;
 
-                if (index >= Width && index + 1 < Monoparticles.Count && index % Width != Width - 1)
-                {
-                    t = new Triangle(Monoparticles[index], Monoparticles[index + 1], Monoparticles[index - Width + 1]);
-                    Triangles.Add(t);
-                }
+                if (index < Width || index + 1 >= Monoparticles.Count || index%Width == Width - 1) continue;
+                var t = new Triangle(Monoparticles[index], Monoparticles[index + 1], Monoparticles[index - Width + 1]);
+                Triangles.Add(t);
             }
         }
         //find particle index
@@ -334,11 +308,9 @@
 
             for (var i = 0; i < list.Count; i++)
             {
-                if (list[i] == mp)
-                {
-                    index = i;
-                    break;
-                }
+                if (list[i] != mp) continue;
+                index = i;
+                break;
             }
             return index;
         }
@@ -349,11 +321,9 @@
 
             for (var i = 0; i < list.Count; i++)
             {
-                if (list[i] == t)
-                {
-                    index = i;
-                    break;
-                }
+                if (list[i] != t) continue;
+                index = i;
+                break;
             }
             return index;
         }
@@ -361,6 +331,7 @@
         public GameObject CreateDrawer(SpringDamper sd)//takes in sd value
         { //used for line renderers
             var drawerGo = Instantiate(PrefabDamper, (sd.P1.Position + sd.P2.Position) / 2f, new Quaternion()) as GameObject; //instantiate game object
+            if (drawerGo == null) return null;
             var lr = drawerGo.GetComponent<LineRenderer>();
             lr.materials[0].color = Color.black; //the color of the line renderers. //will be black
             lr.SetWidth(.1f, .1f);

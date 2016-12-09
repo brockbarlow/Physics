@@ -38,20 +38,17 @@
 
         public bool ThreadTearing(float tf) //takes in tear factor value
         {
-            if ((P2.Position - P1.Position).magnitude > RestLength * tf) //if magnitude value is greater than the value of rest length times tear factor, do the following. if not, return false.
+            if (!((P2.Position - P1.Position).magnitude > RestLength*tf)) return false;
+            if (P2.Particles.Contains(P1)) //if particle object two's particles list contains a particle object one, remove it
             {
-                if (P2.Particles.Contains(P1)) //if particle object two's particles list contains a particle object one, remove it
-                {
-                    P2.Particles.Remove(P1);
-                }
-
-                if (P1.Particles.Contains(P2)) //if particle object one's particles list contains a particel object two, remove it
-                {
-                    P1.Particles.Remove(P2);
-                }
-                return true;
+                P2.Particles.Remove(P1);
             }
-            return false;
+
+            if (P1.Particles.Contains(P2)) //if particle object one's particles list contains a particel object two, remove it
+            {
+                P1.Particles.Remove(P2);
+            }
+            return true;
         }
     }
 }
