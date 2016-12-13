@@ -37,29 +37,6 @@
         public Toggle WindToggle;
         public Slider TearFactorSlider;
 
-        public void Awake()
-        {   //create new lists
-            Monoparticles = new List<MonoParticle>();
-            SpringDampers = new List<SpringDamper>();
-            Triangles = new List<Triangle>();
-            Drawers = new List<GameObject>();
-
-            //create the grid
-            SpawnParticles(Width, Height);
-
-            //set dampers and triangles
-            SetSpringDampers();
-            SetTriangles();
-
-            //lock the camera in place
-            var total = Monoparticles.Aggregate(Vector3.zero, (current, mp) => current + mp.Particle.Position);
-            total = total / Monoparticles.Count;
-            total.x = 3.67f;
-            total.y = 0f;
-            total.z = -47.48f;
-            PrefabCamera.transform.position = total;
-        }
-
         public void Start()
         {   //set the slider values
             SpringConstantSlider.value = 100f;
@@ -74,12 +51,47 @@
             TearFactor = TearFactorSlider.value;
         }
 
+        public void Awake()
+        {   //create new lists
+            Monoparticles = new List<MonoParticle>();
+            SpringDampers = new List<SpringDamper>();
+            Triangles = new List<Triangle>();
+            Drawers = new List<GameObject>();
+
+            //create the grid
+            SpawnParticles(Width, Height);
+
+            //set dampers
+            SetSpringDampers();
+
+            //set triangles
+            SetTriangles();
+
+            //lock the camera in place
+            var cameraLock = Monoparticles.Aggregate(Vector3.zero, (current, mp) => current + mp.Particle.Position);
+            cameraLock = cameraLock / Monoparticles.Count;
+            cameraLock.x = 3.67f;
+            cameraLock.y = 0f;
+            cameraLock.z = -47.48f;
+            PrefabCamera.transform.position = cameraLock;
+        }
+
         public void Update()
         {   //update these variables with the slider values
             SpringConstant = SpringConstantSlider.value;
             DampingFactor = DampingFactorSlider.value;
             WindStrength = WindStrengthSlider.value;
             TearFactor = TearFactorSlider.value;
+        }
+
+        public GameObject CreateDrawer(SpringDamper sd)//takes in sd value
+        { //used for line renderers
+            var drawerGo = Instantiate(PrefabDamper, (sd.P1.Position + sd.P2.Position) / 2f, new Quaternion()) as GameObject; //instantiate game object
+            if (drawerGo == null) return null;
+            var lr = drawerGo.GetComponent<LineRenderer>();
+            lr.materials[0].color = Color.black; //the color of the line renderers. //will be black
+            lr.SetWidth(.1f, .1f);
+            return drawerGo;
         }
 
         public void FixedUpdate()
@@ -256,13 +268,27 @@
 
                 if (index + Width + 1 >= Monoparticles.Count || (index + 1)%Width <= index%Width) continue;
                 {
-//creates a diagonal line (top right)
+                  //creates a diagonal line (top right)
                     mp.Particle.Particles.Add(Monoparticles[index + Width + 1].Particle);
                     var sd = new SpringDamper(mp.Particle, Monoparticles[index + Width + 1].Particle, SpringConstant, DampingFactor, RestLength);
                     Drawers.Add(CreateDrawer(sd));
                     SpringDampers.Add(sd);
                 }
             }
+        }
+
+        //find particle index
+        public int FindIndex(List<MonoParticle> list, MonoParticle mp)
+        {
+            var index = 0;
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                if (list[i] != mp) continue;
+                index = i;
+                break;
+            }
+            return index;
         }
 
         public void SetTriangles()
@@ -301,19 +327,7 @@
                 Triangles.Add(t);
             }
         }
-        //find particle index
-        public int FindIndex(List<MonoParticle> list, MonoParticle mp)
-        {
-            var index = 0;
-
-            for (var i = 0; i < list.Count; i++)
-            {
-                if (list[i] != mp) continue;
-                index = i;
-                break;
-            }
-            return index;
-        }
+        
         //find triangle index
         public int FindIndex(List<Triangle> list, Triangle t)
         {
@@ -326,16 +340,6 @@
                 break;
             }
             return index;
-        }
-
-        public GameObject CreateDrawer(SpringDamper sd)//takes in sd value
-        { //used for line renderers
-            var drawerGo = Instantiate(PrefabDamper, (sd.P1.Position + sd.P2.Position) / 2f, new Quaternion()) as GameObject; //instantiate game object
-            if (drawerGo == null) return null;
-            var lr = drawerGo.GetComponent<LineRenderer>();
-            lr.materials[0].color = Color.black; //the color of the line renderers. //will be black
-            lr.SetWidth(.1f, .1f);
-            return drawerGo;
         }
     }
 }
