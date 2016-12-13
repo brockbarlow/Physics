@@ -3,7 +3,6 @@
     using UnityEngine;
     using System.Collections.Generic;
     using UnityEngine.UI;
-    using System.Linq;
 
     public class Controls : MonoBehaviour
     {   //lists for monoparticles, springDampers, triangles, and drawers
@@ -68,7 +67,11 @@
             SetTriangles();
 
             //lock the camera in place
-            var cameraLock = Monoparticles.Aggregate(Vector3.zero, (current, mp) => current + mp.Particle.Position);
+            var cameraLock = Vector3.zero;
+            foreach (var mp in Monoparticles)
+            {
+                cameraLock += mp.Particle.Position;
+            }
             cameraLock = cameraLock / Monoparticles.Count;
             cameraLock.x = 3.67f;
             cameraLock.y = 0f;
@@ -96,12 +99,20 @@
 
         public void FixedUpdate()
         {   //create new 'temp' lists
-            var tempSpringDampers = SpringDampers.ToList();
+            var tempSpringDampers = new List<SpringDamper>();
+            var tempTriangles = new List<Triangle>();
 
             //add sd to 'temp' spring dampers list
+            foreach (var sd in SpringDampers)
+            {
+                tempSpringDampers.Add(sd);
+            }
 
             //add t to 'temp' triangles list
-            var tempTriangles = Triangles.ToList();
+            foreach (var t in Triangles)
+            {
+                tempTriangles.Add(t);
+            }
 
             foreach (var mp in Monoparticles)
             { //for each particle: apply gravity
@@ -124,16 +135,20 @@
 
             foreach (var t in tempTriangles)
             {
-                if (!WindToggle.isOn) continue;
-                Wind = true;
-                if (!Wind) continue;
-                if (!SpringDampers.Contains(t.Sd1) || !SpringDampers.Contains(t.Sd2) || !SpringDampers.Contains(t.Sd3))
+                if (WindToggle.isOn) //if toggle box is checked..
                 {
-                    Triangles.Remove(t);
-                }
-                else
-                {   //compute aero force
-                    t.ComputeAerodynamicForce(Vector3.forward * WindStrength);
+                    Wind = true;
+                    if (Wind) //if wind is on...
+                    {
+                        if (!SpringDampers.Contains(t.Sd1) || !SpringDampers.Contains(t.Sd2) || !SpringDampers.Contains(t.Sd3))
+                        {
+                            Triangles.Remove(t);
+                        }
+                        else
+                        { //compute aero force
+                            t.ComputeAerodynamicForce(Vector3.forward*WindStrength);
+                        }
+                    }
                 }
             }
 
@@ -192,9 +207,13 @@
 
         public void LateUpdate()
         {   //create new 'temp' list
-            var tempSpringDampers = Drawers.ToList();
+            var tempSpringDampers = new List<GameObject>();
 
             //add go to 'temp' list
+            foreach (var go in Drawers)
+            {
+                tempSpringDampers.Add(go);
+            }
 
             //setup line renderers
             for (var i = 0; i < tempSpringDampers.Count; i++)
@@ -213,7 +232,7 @@
 
             for (var i = 0; i < h; i++)
             {
-                for (var j = 0; j < w; j++/*, count++*/)
+                for (var j = 0; j < w; j++)
                 {
                     var temp = Instantiate(Prefab, new Vector3(x, y, 0), new Quaternion()) as GameObject; //instantiate game object
                     if (temp != null)
