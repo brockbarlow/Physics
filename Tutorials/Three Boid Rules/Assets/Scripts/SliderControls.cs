@@ -7,6 +7,7 @@
     public class SliderControls : MonoBehaviour
     {
         public List<BoidRules> BoidRules;
+
         public Slider CohesionSlider;
         public Slider DispensionSlider;
         public Slider AlignmentSlider;
